@@ -1,6 +1,6 @@
 -- LeonOS installer
 
-local DEFAULT_ROM_DIR = "/leonos"
+local DEFAULT_ROM_DIR = "/rc"
 print("Downloading required libraries...")
 print("Run installer step 1")
 local function dl(f)
@@ -64,7 +64,7 @@ tu.coloredPrint(colors.yellow,
 local ROM_DIR
 tu.coloredPrint("Enter installation directory ", colors.yellow, "[",
   colors.lightBlue, DEFAULT_ROM_DIR, colors.yellow, "]")
-tu.coloredWrite(colors.yellow, "$ installer >>> ")
+tu.coloredWrite(colors.yellow, "$ installer >>>")
 
 ROM_DIR = read()
 if #ROM_DIR == 0 then ROM_DIR = DEFAULT_ROM_DIR end
