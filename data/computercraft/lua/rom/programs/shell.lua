@@ -66,7 +66,7 @@ local history = {}
 while true do
   term.setTextColor(colors.yellow)
   term.setBackgroundColor(colors.black)
-  rc.write(textutils.coloredPrint(colors.yellow, "$"..shell.dir(), colors.green, " >>> "))
+  rc.write("$ "..shell.dir().." >>> ")
   term.setTextColor(colors.white)
 
   local text = term.read(nil, history, shell.complete)
