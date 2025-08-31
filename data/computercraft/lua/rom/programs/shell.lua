@@ -12,7 +12,7 @@ local old_bg = term.getBackgroundColor()
 term.setTextColor(colors.white)
 term.setBackgroundColor(colors.cyan)
 term.at(1, 1).clearLine()
-term.at(1, 1).write("=== Shell 命令行 ===")
+term.at(1, 1).write("=== Shell Command Line ===")
 
 -- 恢复颜色设置
 term.setTextColor(old_fg)
