@@ -1,19 +1,19 @@
 -- LeonOS installer
 
 local DEFAULT_ROM_DIR = "/rc"
-print("Downloading required libraries...")
+-- print("Downloading required libraries...")
 
-local function dl(f)
-  local hand, err = http.get(f, nil, true)
-  if not hand then
-    error(err, 0)
-  end
+-- local function dl(f)
+--   local hand, err = http.get(f, nil, true)
+--   if not hand then
+--     error(err, 0)
+--   end
 
-  local data = hand.readAll()
-  hand.close()
+--   local data = hand.readAll()
+--   hand.close()
 
-  return data
-end
+--   return data
+-- end
 
 -- set up package.loaded for LeonOS libs
 package.loaded.rc = {
@@ -40,7 +40,7 @@ package.loaded["rc.json"] = json
 
 local function rcload(f)
   return ghload(
-    "LeonMMcoset/LeonOS/primary/data/computercraft/lua/rom/"..f, f)
+    "Leonmmcoset/LeonOS/refs/heads/main/data/computercraft/lua/rom/"..f, f)
 end
 
 -- get LeonOS's textutils with its extra utilities
