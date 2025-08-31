@@ -49,7 +49,8 @@ local aliases = {
   rm = "delete",
   rs = "redstone",
   sh = "shell",
-  ps = "threads"
+  ps = "threads",
+  restart = "reboot"
 }
 
 for k, v in pairs(aliases) do
@@ -65,7 +66,7 @@ local history = {}
 while true do
   term.setTextColor(colors.yellow)
   term.setBackgroundColor(colors.black)
-  rc.write(colors.yellow.."$"..shell.dir()..colors.green.." >>> ")
+  rc.write(textutils.coloredPrint(colors.yellow, "$"..shell.dir(), colors.green, " >>> "))
   term.setTextColor(colors.white)
 
   local text = term.read(nil, history, shell.complete)

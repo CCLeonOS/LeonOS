@@ -1,4 +1,4 @@
-_G._HOST = _G._HOST .. " (LeonOS 1.6.0)"
+_G._HOST = _G._HOST .. " (LeonOS 1.0)"
 
 local fs = rawget(_G, "fs")
 
@@ -27,7 +27,7 @@ end
 local expect = function(_, _, _, _) end
 
 local shutdown = pull(os, "shutdown")
-local reboot = pull(os, "restart")
+local reboot = pull(os, "reboot")
 
 -- `os` extras go in here now.
 local rc = {
