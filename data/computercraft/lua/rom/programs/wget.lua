@@ -5,6 +5,7 @@ if not package.loaded.http then
 end
 
 local http = require("http")
+local fs = require("fs")
 
 local args = {...}
 
@@ -30,6 +31,10 @@ end
 
 if args[1] == "run" then
   local data = get(args[2])
+  -- 确保fs模块已加载
+  if not _G.fs then
+    _G.fs = require("fs")
+  end
   assert(load(data, "=<wget-run>", "t", _G))()
 else
   local filename = args[2] or (args[1]:match("[^/]+$")) or
