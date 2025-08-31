@@ -1,48 +1,48 @@
 -- LeonOS installer
 
 local DEFAULT_ROM_DIR = "/rc"
--- print("Downloading required libraries...")
+print("Downloading required libraries...")
+print("Run installer step 1")
+local function dl(f)
+  local hand, err = http.get(f, nil, true)
+  if not hand then
+    error(err, 0)
+  end
 
--- local function dl(f)
---   local hand, err = http.get(f, nil, true)
---   if not hand then
---     error(err, 0)
---   end
+  local data = hand.readAll()
+  hand.close()
 
---   local data = hand.readAll()
---   hand.close()
-
---   return data
--- end
-
+  return data
+end
+print("Run installer step 2")
 -- set up package.loaded for LeonOS libs
 package.loaded.rc = {
   expect = require("cc.expect").expect,
   write = write, sleep = sleep
 }
-
+print("Run installer step 3")
 package.loaded.term = term
 package.loaded.colors = colors
 _G.require = require
-
+print("Run installer step 4")
 function term.at(x, y)
   term.setCursorPos(x, y)
   return term
 end
-
+print("Run installer step 5")
 local function ghload(f, c)
   return assert(load(dl("https://raw.githubusercontent.com/"..f),
     "="..(c or f), "t", _G))()
 end
-
+print("Run installer step 6")
 local json = ghload("rxi/json.lua/master/json.lua", "ghload(json)")
 package.loaded["rc.json"] = json
-
+print("Run installer step 7")
 local function rcload(f)
   return ghload(
     "Leonmmcoset/LeonOS/refs/heads/main/data/computercraft/lua/rom/"..f, f)
 end
-
+print("Run installer step 8")
 -- get LeonOS's textutils with its extra utilities
 local tu = rcload("apis/textutils.lua")
 
@@ -56,7 +56,7 @@ local function progress(y, a, b)
     {fg=colors.white, bg=colors.black}, (" "):rep((w-2)-#bar),
     colors.yellow, "]")
 end
-
+print("Run installer step 9")
 term.at(1,1).clear()
 tu.coloredPrint(colors.yellow,
   "LeonOS Installer 1.0\n=======================")
