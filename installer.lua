@@ -1,8 +1,8 @@
 -- LeonOS installer
 
 local DEFAULT_ROM_DIR = "/rc"
-print("Downloading required libraries...")
-print("Run installer step 1")
+print("Start loading LeonOS installer...")
+print("[Installer] Loading module 1")
 local function dl(f)
   local hand, err = http.get(f, nil, true)
   if not hand then
@@ -14,35 +14,41 @@ local function dl(f)
 
   return data
 end
-print("Run installer step 2")
+print("[Installer] Loading done.")
+print("[Installer] Loading module 2")
 -- set up package.loaded for LeonOS libs
 package.loaded.rc = {
   expect = require("cc.expect").expect,
   write = write, sleep = sleep
 }
-print("Run installer step 3")
+print("[Installer] Loading done.")
+print("[Installer] Loading module 3")
 package.loaded.term = term
 package.loaded.colors = colors
 _G.require = require
-print("Run installer step 4")
+print("[Installer] Loading done.")
+print("[Installer] Loading module 4")
 function term.at(x, y)
   term.setCursorPos(x, y)
   return term
 end
-print("Run installer step 5")
+print("[Installer] Loading done.")
+print("[Installer] Loading module 5")
 local function ghload(f, c)
   return assert(load(dl("https://gh.catmak.name/https://raw.githubusercontent.com/"..f),
     "="..(c or f), "t", _G))()
 end
-print("Run installer step 6")
+print("[Installer] Loading done.")
+print("[Installer] Loading module 6")
 local json = ghload("rxi/json.lua/master/json.lua", "ghload(json)")
 package.loaded["rc.json"] = json
-print("Run installer step 7")
+print("[Installer] Loading module 7")
 local function rcload(f)
   return ghload(
     "Leonmmcoset/LeonOS/refs/heads/main/data/computercraft/lua/rom/"..f, f)
 end
-print("Run installer step 8")
+print("[Installer] Loading done.")
+print("[Installer] Loading module 8")
 -- get LeonOS's textutils with its extra utilities
 local tu = rcload("apis/textutils.lua")
 
@@ -56,10 +62,18 @@ local function progress(y, a, b)
     {fg=colors.white, bg=colors.black}, (" "):rep((w-2)-#bar),
     colors.yellow, "]")
 end
-print("Run installer step 9")
+print("[Installer] Loading done.")
 term.at(1,1).clear()
 tu.coloredPrint(colors.yellow,
   "LeonOS Installer\n=======================")
+print("You are going to install LeonOS to your computer.")
+print("This will overwrite any existing files in the installation directory.")
+tu.coloredPrint(colors.yellow, "Are you sure? (y/n)")
+local confirm = read()
+if confirm ~= "y" then
+  print("Installation cancelled.")
+  return
+end
 
 local ROM_DIR
 tu.coloredPrint("Enter installation directory ", colors.yellow, "[",
