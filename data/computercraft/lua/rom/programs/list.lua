@@ -7,6 +7,7 @@ local shell = require("shell")
 local colors = require("colors")
 local settings = require("settings")
 local textutils = require("textutils")
+local term = require("term")
 
 if #args == 0 then args[1] = shell.dir() end
 
