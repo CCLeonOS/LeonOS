@@ -99,7 +99,9 @@ while #admin_username == 0 do
 end
 
 tu.coloredPrint("Enter admin password (leave empty for no password): ")
-local admin_password = read(nil, {}, nil, true) -- Use password mode
+-- Use password mask with "*" character
+tu.coloredPrint(colors.yellow, "(Password will be hidden)")
+local admin_password = read(nil, {}, nil, "*") -- Use password mode with "*" mask
 
 -- Save user info
 settings.set("LeonOS.users.admin.username", admin_username)
