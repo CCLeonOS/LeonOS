@@ -128,7 +128,7 @@ header()
 
 write("Getting repository tree...")
 
-local repodata = json.decode(dl("https://api.github.com/repos/LeonMMcoset/LeonOS/git/trees/primary?recursive=1"))
+local repodata = json.decode(dl("https://api.github.com/repos/Leonmmcoset/LeonOS/git/trees/primary?recursive=1"))
 
 write("Filtering files...")
 

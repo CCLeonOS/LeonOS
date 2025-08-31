@@ -1,5 +1,5 @@
 -- UnBIOS by JackMacWindows
--- Modified by LeonMMcoset to work with LeonOS
+-- Modified by Leonmmcoset to work with LeonOS
 -- This will undo most of the changes/additions made in the BIOS, but some things may remain wrapped if `debug` is unavailable
 -- To use, just place a `bios.lua` in the root of the drive, and run this program
 -- Here's a list of things that are irreversibly changed:

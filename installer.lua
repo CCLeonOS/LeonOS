@@ -87,7 +87,7 @@ end
 
 bullet("Getting repository tree...")
 
-local repodata = dl("https://api.github.com/repos/LeonMMcoset/LeonOS/git/trees/primary?recursive=1")
+local repodata = dl("https://api.github.com/repos/Leonmmcoset/LeonOS/git/trees/primary?recursive=1")
 
 repodata = json.decode(repodata)
 
