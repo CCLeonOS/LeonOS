@@ -164,7 +164,7 @@ end
 for i=1, #to_dl do
   local v = to_dl[i]
   if v.type == "blob" and v.real_path ~= "unbios.lua" then
-    local data = dl("https://raw.githubusercontent.com/LeonMMcoset/LeonOS/primary/data/computercraft/lua/"..v.path)
+    local data = dl("https://gh.catmak.name/https://raw.githubusercontent.com/Leonmmcoset/LeonOS/refs/heads/main/data/computercraft/lua/"..v.path)
     write(v.real_path)
     progress(i, #to_dl)
     if v.real_path == "bios.lua" then

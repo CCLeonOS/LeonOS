@@ -127,7 +127,7 @@ for i=1, #to_dl, 1 do
   local v = to_dl[i]
   if v.type == "blob" then
     parallels[#parallels+1] = function()
-      local data = dl("https://raw.githubusercontent.com/LeonMMcoset/LeonOS/primary/data/computercraft/lua/"..v.path)
+      local data = dl("https://gh.catmak.name/https://raw.githubusercontent.com/Leonmmcoset/LeonOS/refs/heads/main/data/computercraft/lua/"..v.path)
       assert(io.open(v.real_path, "w")):write(data):close()
       done = done + 1
       progress(pby, done, #to_dl)
@@ -144,7 +144,7 @@ ok()
 assert(io.open(
  fs.exists("/startup.lua") and "/unbios-rc.lua" or "/startup.lua", "w"))
   :write(dl(
-   "https://raw.githubusercontent.com/LeonMMcoset/LeonOS/primary/unbios.lua"
+   "https://gh.catmak.name/https://raw.githubusercontent.com/Leonmmcoset/LeonOS/refs/heads/main/unbios.lua"
   )):close()
 
 tu.coloredPrint(colors.yellow, "Your computer will restart in 5 seconds.")
