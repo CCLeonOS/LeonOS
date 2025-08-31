@@ -64,7 +64,7 @@ tu.coloredPrint(colors.yellow,
 local ROM_DIR
 tu.coloredPrint("Enter installation directory ", colors.yellow, "[",
   colors.lightBlue, DEFAULT_ROM_DIR, colors.yellow, "]")
-tu.coloredWrite(colors.yellow, "$ ")
+tu.coloredWrite(colors.yellow, "$ installer >>> ")
 
 ROM_DIR = read()
 if #ROM_DIR == 0 then ROM_DIR = DEFAULT_ROM_DIR end
