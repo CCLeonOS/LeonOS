@@ -1,4 +1,4 @@
-_G._HOST = _G._HOST .. " (LeonOS 1.0)"
+_G._HOST = _G._HOST .. " (LeonOS 1.6.0)"
 
 local fs = rawget(_G, "fs")
 
