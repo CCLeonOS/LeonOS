@@ -27,7 +27,7 @@ end
 local expect = function(_, _, _, _) end
 
 local shutdown = pull(os, "shutdown")
-local reboot = pull(os, "reboot")
+local reboot = pull(os, "restart")
 
 -- `os` extras go in here now.
 local rc = {
