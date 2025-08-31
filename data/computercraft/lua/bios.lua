@@ -1,4 +1,4 @@
-_G._HOST = _G._HOST .. " (LeonOS 1.6.0)"
+_G._HOST = _G._HOST .. " (LeonOS 0.1.0)"
 
 local fs = rawget(_G, "fs")
 
@@ -33,8 +33,8 @@ local reboot = pull(os, "restart")
 local rc = {
   _NAME = "LeonOS",
   _VERSION = {
-    major = 1,
-    minor = 6,
+    major = 0,
+    minor = 1,
     patch = 0
   },
   queueEvent  = pull(os, "queueEvent"),
