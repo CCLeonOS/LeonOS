@@ -1,4 +1,4 @@
-_G._HOST = _G._HOST .. " (LeonOS 1.6.0)"
+_G._HOST = _G._HOST .. " (LeonOS Alpha 1.1)"
 
 local fs = rawget(_G, "fs")
 
@@ -183,6 +183,31 @@ for i=1, #files, 1 do
 end
 
 expect = require("cc.expect").expect
+
+-- Admin login verification
+local tu = require("rom.apis.textutils")
+local admin_username = settings.get("LeonOS.users.admin.username")
+local admin_password = settings.get("LeonOS.users.admin.password")
+
+if admin_username then
+  term.clear()
+  tu.coloredPrint(colors.yellow, "LeonOS Login\n=======================")
+  tu.coloredPrint("Username: ", colors.lightBlue, admin_username)
+  
+  if admin_password then
+    tu.coloredPrint("Password: ")
+    local input_password = read(nil, {}, nil, true) -- Use password mode
+    
+    while input_password ~= admin_password do
+      tu.coloredPrint(colors.red, "Incorrect password!\n")
+      tu.coloredPrint("Password: ")
+      input_password = read(nil, {}, nil, true)
+    end
+  else
+    tu.coloredPrint(colors.green, "No password set. Press Enter to continue.")
+    read()
+  end
+end
 
 local thread = require("rc.thread")
 

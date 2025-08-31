@@ -86,6 +86,28 @@ if #ROM_DIR == 0 then ROM_DIR = DEFAULT_ROM_DIR end
 ROM_DIR = "/"..shell.resolve(ROM_DIR)
 
 settings.set("LeonOS.rom_dir", ROM_DIR)
+
+-- Create admin user
+print("")
+tu.coloredPrint(colors.yellow, "Create Administrator Account\n=======================")
+tu.coloredPrint("Enter admin username: ")
+local admin_username = read()
+while #admin_username == 0 do
+  tu.coloredPrint(colors.red, "Username cannot be empty!\n")
+  tu.coloredPrint("Enter admin username: ")
+  admin_username = read()
+end
+
+tu.coloredPrint("Enter admin password (leave empty for no password): ")
+local admin_password = read(nil, {}, nil, true) -- Use password mode
+
+-- Save user info
+settings.set("LeonOS.users.admin.username", admin_username)
+if #admin_password > 0 then
+  settings.set("LeonOS.users.admin.password", admin_password)
+else
+  settings.set("LeonOS.users.admin.password", nil)
+end
 settings.save()
 
 tu.coloredPrint(colors.white, "Installing LeonOS to ", colors.lightBlue,
