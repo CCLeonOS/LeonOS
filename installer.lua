@@ -65,7 +65,7 @@ end
 print("[Installer] Loading done.")
 term.at(1,1).clear()
 tu.coloredPrint(colors.yellow,
-  "LeonOS Installer (Alpha 1.1)\n=======================")
+  "LeonOS Installer\n=======================")
 print("You are going to install LeonOS to your computer.")
 print("This will overwrite any existing files in the installation directory.")
 tu.coloredPrint(colors.yellow, "Are you sure? (y/n)")
@@ -86,30 +86,6 @@ if #ROM_DIR == 0 then ROM_DIR = DEFAULT_ROM_DIR end
 ROM_DIR = "/"..shell.resolve(ROM_DIR)
 
 settings.set("LeonOS.rom_dir", ROM_DIR)
-
--- Create admin user
-print("")
-tu.coloredPrint(colors.yellow, "Create Administrator Account\n=======================")
-tu.coloredPrint("Enter admin username: ")
-local admin_username = read()
-while #admin_username == 0 do
-  tu.coloredPrint(colors.red, "Username cannot be empty!\n")
-  tu.coloredPrint("Enter admin username: ")
-  admin_username = read()
-end
-
-tu.coloredPrint("Enter admin password (leave empty for no password): ")
--- Use password mask with "*" character
-tu.coloredPrint(colors.yellow, "(Password will be hidden)")
-local admin_password = read(nil, {}, nil, "*") -- Use password mode with "*" mask
-
--- Save user info
-settings.set("LeonOS.users.admin.username", admin_username)
-if #admin_password > 0 then
-  settings.set("LeonOS.users.admin.password", admin_password)
-else
-  settings.set("LeonOS.users.admin.password", nil)
-end
 settings.save()
 
 tu.coloredPrint(colors.white, "Installing LeonOS to ", colors.lightBlue,
