@@ -1,6 +1,6 @@
 -- LeonOS installer
 
-local DEFAULT_ROM_DIR = "/rc"
+local DEFAULT_ROM_DIR = "/leonos"
 print("Downloading required libraries...")
 print("Run installer step 1")
 local function dl(f)
@@ -147,14 +147,12 @@ assert(io.open(
    "https://gh.catmak.name/https://raw.githubusercontent.com/Leonmmcoset/LeonOS/refs/heads/main/unbios.lua"
   )):close()
 
-tu.coloredPrint(colors.yellow, "Your computer will restart in 5 seconds.")
+tu.coloredPrint(colors.yellow, "Your computer will restart in 3 seconds.")
 local _, y = term.getCursorPos()
 
-for i=1, 5, 1 do
+for i=1, 3, 1 do
   progress(y, i, 5)
   os.sleep(1)
 end
-
-os.sleep(0.5)
 
 os.reboot()
