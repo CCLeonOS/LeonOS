@@ -59,7 +59,7 @@ end
 print("Run installer step 9")
 term.at(1,1).clear()
 tu.coloredPrint(colors.yellow,
-  "LeonOS Installer 1.0\n=======================")
+  "LeonOS Installer\n=======================")
 
 local ROM_DIR
 tu.coloredPrint("Enter installation directory ", colors.yellow, "[",
@@ -87,7 +87,7 @@ end
 
 bullet("Getting repository tree...")
 
-local repodata = dl("https://api.github.com/repos/Leonmmcoset/LeonOS/git/trees/primary?recursive=1")
+local repodata = dl("https://api.github.com/repos/Leonmmcoset/LeonOS/git/trees/main?recursive=1")
 
 repodata = json.decode(repodata)
 
