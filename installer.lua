@@ -31,7 +31,7 @@ function term.at(x, y)
 end
 print("Run installer step 5")
 local function ghload(f, c)
-  return assert(load(dl("https://raw.githubusercontent.com/"..f),
+  return assert(load(dl("https://gh.catmak.name/https://raw.githubusercontent.com/"..f),
     "="..(c or f), "t", _G))()
 end
 print("Run installer step 6")
