@@ -65,7 +65,7 @@ end
 print("[Installer] Loading done.")
 term.at(1,1).clear()
 tu.coloredPrint(colors.yellow,
-  "LeonOS Installer\n=======================")
+  "LeonOS Installer (Alpha 1.1)\n=======================")
 print("You are going to install LeonOS to your computer.")
 print("This will overwrite any existing files in the installation directory.")
 tu.coloredPrint(colors.yellow, "Are you sure? (y/n)")
