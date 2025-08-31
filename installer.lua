@@ -108,8 +108,7 @@ end
 local function updateStatus(text)
   statusText.clear()
   local lines = {}
-  for line in text:gmatch("[^
-]+") do
+  for line in text:gmatch("[^]+") do
     table.insert(lines, line)
   end
   for i, line in ipairs(lines) do
