@@ -1,8 +1,8 @@
 -- LeonOS installer
 
 local DEFAULT_ROM_DIR = "/rc"
-term.at(1, 2).write("Start loading LeonOS installer...\n")
-term.write("[Installer] Loading module 1\n")
+print("Start loading LeonOS installer...\n")
+print("[Installer] Loading module 1\n")
 local function dl(f)
   local hand, err = http.get(f, nil, true)
   if not hand then
@@ -14,41 +14,41 @@ local function dl(f)
 
   return data
 end
-term.write("[Installer] Loading done.\n")
-term.write("[Installer] Loading module 2\n")
+print("[Installer] Loading done.\n")
+print("[Installer] Loading module 2\n")
 -- set up package.loaded for LeonOS libs
 package.loaded.rc = {
   expect = require("cc.expect").expect,
   write = write, sleep = sleep
 }
-term.write("[Installer] Loading done.\n")
-term.write("[Installer] Loading module 3\n")
+print("[Installer] Loading done.\n")
+print("[Installer] Loading module 3\n")
 package.loaded.term = term
 package.loaded.colors = colors
 _G.require = require
-term.write("[Installer] Loading done.\n")
-term.write("[Installer] Loading module 4\n")
+print("[Installer] Loading done.\n")
+print("[Installer] Loading module 4\n")
 function term.at(x, y)
   term.setCursorPos(x, y)
   return term
 end
-term.write("[Installer] Loading done.\n")
-term.write("[Installer] Loading module 5\n")
+print("[Installer] Loading done.\n")
+print("[Installer] Loading module 5\n")
 local function ghload(f, c)
   return assert(load(dl("https://gh.catmak.name/https://raw.githubusercontent.com/"..f),
     "="..(c or f), "t", _G))()
 end
-term.write("[Installer] Loading done.\n")
-term.write("[Installer] Loading module 6\n")
+print("[Installer] Loading done.\n")
+print("[Installer] Loading module 6\n")
 local json = ghload("rxi/json.lua/master/json.lua", "ghload(json)")
 package.loaded["rc.json"] = json
-term.write("[Installer] Loading module 7\n")
+print("[Installer] Loading module 7\n")
 local function rcload(f)
   return ghload(
     "Leonmmcoset/LeonOS/refs/heads/main/data/computercraft/lua/rom/"..f, f)
 end
-term.write("[Installer] Loading done.\n")
-term.write("[Installer] Loading module 8\n")
+print("[Installer] Loading done.\n")
+print("[Installer] Loading module 8\n")
 -- get LeonOS's textutils with its extra utilities
 local tu = rcload("apis/textutils.lua")
 
