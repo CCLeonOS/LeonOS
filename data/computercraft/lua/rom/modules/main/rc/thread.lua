@@ -184,7 +184,7 @@ local function redraw()
 
   if #tabs > 1 then
     local len = -scroll + 1
-    wrappedNative.setCursorPos(1, 1)
+    wrappedNative.setCursorPos(1, h)
     wrappedNative.setTextColor(colors.black)
     wrappedNative.setBackgroundColor(colors.gray)
     wrappedNative.clearLine()
@@ -193,7 +193,7 @@ local function redraw()
       local tab = tabs[i]
       local name = names[i]
 
-      wrappedNative.setCursorPos(len, 1)
+      wrappedNative.setCursorPos(len, h)
       len = len + #name
 
       if i == focused then
@@ -208,20 +208,20 @@ local function redraw()
       end
 
       tab.term.setVisible(false)
-      tab.term.reposition(1, 2, w, h - 1)
+      tab.term.reposition(1, 1, w, h - 1)
     end
 
     if totalNameLength > w-2 then
       wrappedNative.setTextColor(colors.black)
       wrappedNative.setBackgroundColor(colors.gray)
       if scroll > 0 then
-        wrappedNative.setCursorPos(1, 1)
+        wrappedNative.setCursorPos(1, h)
         wrappedNative.write("<")
       end
       if totalNameLength - scroll > w-1 then
-        wrappedNative.setCursorPos(w, 1)
+        wrappedNative.setCursorPos(w, h)
         wrappedNative.write(">")
-      end
+        end
     end
 
     tabs[focused].term.setVisible(true)
@@ -253,7 +253,7 @@ local function processEvent(event)
     if #event > 3 then -- mouse event
 
       if #tabs > 1 then
-        if event[4] == 1 then
+        if event[4] == h then
           local curX = -scroll
 
           if event[1] == "mouse_scroll" then
