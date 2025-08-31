@@ -79,7 +79,7 @@ local function dl(f)
   until evt[1] == "http_success" or evt[1] == "http_failure"
 
   if evt[1] == "http_failure" then
-    term.at(1, h).write(evt[3])
+    term.at(1, h).write(evt[3] or "Unknown HTTP error")
 
     local id = os.startTimer(5)
     repeat local _,i = coroutine.yield() until i == id
