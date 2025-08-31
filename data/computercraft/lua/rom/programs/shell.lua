@@ -91,7 +91,7 @@ while true do
     history[#history+1] = text
     local ok, err = shell.run(text)
     if not ok and err then
-      io.stderr:write(err, "\n")
+      io.stderr:write("Application has a error when running and system has stop it. Error:\n", err, "\n")
     end
   end
 end
