@@ -108,7 +108,7 @@ ROM_DIR = "/"..shell.resolve(ROM_DIR)
 settings.set("LeonOS.rom_dir", ROM_DIR)
 settings.save()
 
-tu.coloredPrint(colors.white, "Installing LeonOS "..rc.version().."...", colors.white)
+tu.coloredPrint(colors.white, "Installing LeonOS "..INSTALLER_VERSION.."...", colors.white)
 
 local function bullet(t)
   tu.coloredWrite(colors.red, "- ", colors.white, t)
@@ -184,7 +184,7 @@ tu.coloredPrint(colors.yellow, "Your computer will restart in 3 seconds.")
 local _, y = term.getCursorPos()
 
 for i=1, 3, 1 do
-  progress(y, i, 5)
+  progress(y, i, 3)
   os.sleep(1)
 end
 
