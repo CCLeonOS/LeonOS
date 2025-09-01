@@ -67,6 +67,7 @@ term.write("[Installer] Loading done.\n")
 -- 程序顶部名称栏
 local term = require("term")
 local colors = require("colors")
+local rc = require("rc")
 -- 保存当前颜色设置
 local old_fg = term.getTextColor()
 local old_bg = term.getBackgroundColor()
