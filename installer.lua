@@ -90,7 +90,7 @@ term.at(1, 2)
 tu.coloredPrint(colors.yellow,
   "LeonOS Installer (v"..INSTALLER_VERSION..")\n=======================")
 tu.coloredPrint("You are going to install LeonOS "..rc.version().." to your computer.")
-tu.coloredPrint("This will ",colors.red,"OVERWRITE any existing files", colors.white, " in the installation directory.")
+tu.coloredPrint("This will ",colors.red,"OVERWRITE any existing files", colors.white, " in the computer.")
 tu.coloredPrint(colors.yellow, "Are you sure? (y/n)")
 local confirm = read()
 if confirm ~= "y" then
