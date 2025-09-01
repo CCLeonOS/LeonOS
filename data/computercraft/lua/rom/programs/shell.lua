@@ -81,8 +81,16 @@ end
 
 local history = {}
 while true do
-  term.setTextColor(colors.yellow)
+  -- 先清除控制台内容，但保留顶部应用栏
+  local w, h = term.getSize()
+  term.setTextColor(colors.white)
   term.setBackgroundColor(colors.black)
+  for y=2, h do
+    term.at(1, y).clearLine()
+  end
+  term.at(1, 2)
+  
+  term.setTextColor(colors.yellow)
   rc.write("$ "..shell.dir().." >>> ")
   term.setTextColor(colors.white)
 
