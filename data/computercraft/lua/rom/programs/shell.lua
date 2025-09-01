@@ -30,6 +30,7 @@ if os.version then
 else
   textutils.coloredPrint(colors.yellow, rc.version(), colors.white)
 end
+textutils.coloredPrint(colors.yellow, "Welcome using the beta version of LeonOS!"colors.white)
 
 thread.vars().parentShell = thread.id()
 shell.init(_ENV)

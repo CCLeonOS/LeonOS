@@ -1,5 +1,5 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "0.1.8"
+local INSTALLER_VERSION = "0.1.9"
 local DEFAULT_ROM_DIR = "/leonos"
 
 print("Start loading LeonOS installer...")
@@ -88,8 +88,8 @@ end
 term.at(1, 2)
 tu.coloredPrint(colors.yellow,
   "LeonOS Installer (v"..INSTALLER_VERSION..")\n=======================")
-tu.coloredPrint("You are going to install LeonOS to your computer.")
-tu.coloredPrint("This will ",colors.red,"overwrite any existing files", colors.white, " in the installation directory.")
+tu.coloredPrint("You are going to install LeonOS "..rc.version().." to your computer.")
+tu.coloredPrint("This will ",colors.red,"OVERWRITE any existing files", colors.white, " in the installation directory.")
 tu.coloredPrint(colors.yellow, "Are you sure? (y/n)")
 local confirm = read()
 if confirm ~= "y" then
@@ -98,20 +98,16 @@ if confirm ~= "y" then
 end
 
 local ROM_DIR
-tu.coloredPrint("Enter installation directory ", colors.yellow, "[",
-  colors.lightBlue, DEFAULT_ROM_DIR, colors.yellow, "]")
-tu.coloredWrite(colors.yellow, "$ installer >>>")
-
-ROM_DIR = read()
-if #ROM_DIR == 0 then ROM_DIR = DEFAULT_ROM_DIR end
+-- tu.coloredPrint("Enter installation directory ", colors.yellow, "[",
+--   colors.lightBlue, DEFAULT_ROM_DIR, colors.yellow, "]")
+ROM_DIR = DEFAULT_ROM_DIR
 
 ROM_DIR = "/"..shell.resolve(ROM_DIR)
 
 settings.set("LeonOS.rom_dir", ROM_DIR)
 settings.save()
 
-tu.coloredPrint(colors.white, "Installing LeonOS to ", colors.lightBlue,
-  ROM_DIR, colors.white)
+tu.coloredPrint(colors.white, "Installing LeonOS "..rc.version().."...", colors.white)
 
 local function bullet(t)
   tu.coloredWrite(colors.red, "- ", colors.white, t)
