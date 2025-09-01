@@ -12,7 +12,7 @@ local old_bg = term.getBackgroundColor()
 term.setTextColor(colors.white)
 term.setBackgroundColor(colors.cyan)
 term.at(1, 1).clearLine()
-term.at(1, 1).write("=== Shell Command Line ===")
+term.at(1, 1).write("=== LeonOS Shell ===")
 
 -- 恢复颜色设置
 term.setTextColor(old_fg)
@@ -81,21 +81,21 @@ end
 
 local history = {}
 while true do
-  -- 先清除控制台内容，但保留顶部应用栏
-  local w, h = term.getSize()
-  term.setTextColor(colors.white)
-  term.setBackgroundColor(colors.black)
-  for y=2, h do
-    term.at(1, y).clearLine()
-  end
-  term.at(1, 2)
-  
-  term.setTextColor(colors.yellow)
-  rc.write("$ "..shell.dir().." >>> ")
-  term.setTextColor(colors.white)
-
-  local text = term.read(nil, history, shell.complete)
   if #text > 0 then
+    -- 先清除控制台内容，但保留顶部应用栏
+    local w, h = term.getSize()
+    term.setTextColor(colors.white)
+    term.setBackgroundColor(colors.black)
+    for y=2, h do
+      term.at(1, y).clearLine()
+    end
+    term.at(1, 2)
+    
+    term.setTextColor(colors.yellow)
+    rc.write("$ "..shell.dir().." >>> ")
+    term.setTextColor(colors.white)
+
+    local text = term.read(nil, history, shell.complete)
     history[#history+1] = text
     local ok, err = shell.run(text)
     if not ok and err then

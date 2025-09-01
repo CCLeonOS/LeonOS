@@ -1,5 +1,6 @@
-_G._HOST = _G._HOST .. " (LeonOS 0.1.1)"
-
+_G._HOST = _G._HOST .. " (LeonOS 0.1.2)"
+print("LeonBIOS")
+print("Starting...")
 local fs = rawget(_G, "fs")
 
 _G._RC_ROM_DIR = _RC_ROM_DIR or (...) and fs.exists("/rc") and "/rc" or "/rom"
@@ -16,13 +17,13 @@ if fs.exists("/.start_rc.lua") and not (...) then
   _sd()
   while true do coroutine.yield() end
 end
-
+print("[OK] Boot step 1")
 local function pull(tab, key)
   local func = tab[key]
   tab[key] = nil
   return func
 end
-
+print("[OK] Boot step 2")
 -- this is overwritten further down but `load` needs it
 local expect = function(_, _, _, _) end
 
@@ -35,7 +36,7 @@ local rc = {
   _VERSION = {
     major = 0,
     minor = 1,
-    patch = 1
+    patch = 2
   },
   queueEvent  = pull(os, "queueEvent"),
   startTimer  = pull(os, "startTimer"),
@@ -53,7 +54,7 @@ local rc = {
 
 -- and a few more
 rc.pushEvent = rc.queueEvent
-
+print("[OK] Boot step 3")
 function rc.shutdown()
   shutdown()
   while true do coroutine.yield() end
@@ -63,7 +64,7 @@ function rc.reboot()
   reboot()
   while true do coroutine.yield() end
 end
-
+print("[OK] Boot step 4")
 local timer_filter = {}
 function rc.pullEventRaw(filter)
   expect(1, filter, "string", "nil")
@@ -93,7 +94,7 @@ function rc.pullEvent(filter)
 
   return table.unpack(sig, 1, sig.n)
 end
-
+print("[OK] Boot step 5")
 function rc.sleep(time, no_term)
   local id = rc.startTimer(time)
   local thread = require("rc.thread").id()
@@ -103,12 +104,12 @@ function rc.sleep(time, no_term)
     local _, tid = (no_term and rc.pullEventRaw or rc.pullEvent)("timer")
   until tid == id
 end
-
+print("[OK] Boot step 6")
 function rc.version()
   return string.format("LeonOS %d.%d.%d",
     rc._VERSION.major, rc._VERSION.minor, rc._VERSION.patch)
 end
-
+print("[OK] Boot step 7")
 -- Lua 5.1?  meh
 if _VERSION == "Lua 5.1" then
   local old_load = load
@@ -156,7 +157,7 @@ if _VERSION == "Lua 5.1" then
     end, func)
   end
 end
-
+print("[OK] Boot step 8")
 local startup = _RC_ROM_DIR .. "/startup"
 local files = fs.list(startup)
 table.sort(files)
@@ -181,9 +182,9 @@ for i=1, #files, 1 do
   local file = startup .. "/" .. files[i]
   assert(loadfile(file))(rc)
 end
-
+print("[OK] Boot step 9")
 expect = require("cc.expect").expect
 
 local thread = require("rc.thread")
-
+print("[OK] Computer load&check system done. Starting operating system...")
 thread.start()
