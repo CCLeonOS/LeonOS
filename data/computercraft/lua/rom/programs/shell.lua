@@ -67,7 +67,8 @@ local aliases = {
   rs = "redstone",
   sh = "shell",
   ps = "threads",
-  restart = "reboot"
+  restart = "reboot",
+  version = "ver"
 }
 
 for k, v in pairs(aliases) do
