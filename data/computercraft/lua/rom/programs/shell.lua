@@ -81,15 +81,6 @@ end
 
 local history = {}
 while true do
-  -- 先清除控制台内容，但保留顶部应用栏
-  local w, h = term.getSize()
-  term.setTextColor(colors.white)
-  term.setBackgroundColor(colors.black)
-  for y=2, h do
-    term.at(1, y).clearLine()
-  end
-  term.at(1, 2)
-  
   term.setTextColor(colors.yellow)
   rc.write("$ "..shell.dir().." >>> ")
   term.setTextColor(colors.white)
@@ -97,6 +88,16 @@ while true do
   local text = term.read(nil, history, shell.complete)
   if #text > 0 then
     history[#history+1] = text
+    
+    -- 运行命令前先清除控制台内容，但保留顶部应用栏
+    local w, h = term.getSize()
+    term.setTextColor(colors.white)
+    term.setBackgroundColor(colors.black)
+    for y=2, h do
+      term.at(1, y).clearLine()
+    end
+    term.at(1, 2)
+    
     local ok, err = shell.run(text)
     if not ok and err then
       io.stderr:write("Application has a error when running and system has stop it. Error:\n", err, "\n")
