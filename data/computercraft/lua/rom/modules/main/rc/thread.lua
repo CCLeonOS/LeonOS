@@ -103,6 +103,9 @@ function api.exists(id)
 end
 
 function api.id()
+  if not current then
+    error("No current thread - are you calling this outside a thread?")
+  end
   return current.id
 end
 
