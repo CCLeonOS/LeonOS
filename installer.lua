@@ -1,8 +1,8 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "0.1.9"
+local INSTALLER_VERSION = "0.2.0"
 local DEFAULT_ROM_DIR = "/leonos"
 
-print("Start loading LeonOS installer...")
+print("Start loading LeonOS installer ("..INSTALLER_VERSION..")...")
 print("[Installer] Loading module 1")
 local function dl(f)
   local hand, err = http.get(f, nil, true)
@@ -89,7 +89,7 @@ end
 term.at(1, 2)
 tu.coloredPrint(colors.yellow,
   "LeonOS Installer (v"..INSTALLER_VERSION..")\n=======================")
-tu.coloredPrint("You are going to install LeonOS "..rc.version().." to your computer.")
+tu.coloredPrint("You are going to install LeonOS "..INSTALLER_VERSION.." to your computer.")
 tu.coloredPrint("This will ",colors.red,"OVERWRITE any existing files", colors.white, " in the computer.")
 tu.coloredPrint(colors.yellow, "Are you sure? (y/n)")
 local confirm = read()
