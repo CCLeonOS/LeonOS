@@ -53,6 +53,6 @@ function nEnv.os.version()
   return "LeonOS 1.0 ALpha 1"
 end
 
-local func, err = loadfile("/leonos/programs/shell.lua", "t", nEnv)
+local func, err = loadfile("/rc/programs/shell.lua", "t", nEnv)
 if not func then error(err, 0) end
 func()

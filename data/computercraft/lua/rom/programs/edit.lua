@@ -23,7 +23,7 @@ local settings = require("settings")
 local df = function(f, ...) return assert(loadfile(f))(...) end
 
 if term.isColor() or settings.get("edit.force_highlight") then
-  df("/leonos/editors/advanced.lua", ...)
+  df("/rc/editors/advanced.lua", ...)
 else
-  df("/leonos/editors/basic.lua", ...)
+  df("/rc/editors/basic.lua", ...)
 end

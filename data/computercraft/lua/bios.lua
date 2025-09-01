@@ -1,7 +1,7 @@
 _G._HOST = _G._HOST .. " (LeonOS 0.1.5)"
 local fs = rawget(_G, "fs")
 
-_G._RC_ROM_DIR = _RC_ROM_DIR or (...) and fs.exists("/leonos") and "/leonos" or "/rom"
+_G._RC_ROM_DIR = _RC_ROM_DIR or (...) and fs.exists("/rc") and "/rc" or "/rom"
 
 if fs.exists("/.start_rc.lua") and not (...) then
   _G._RC_USED_START = true

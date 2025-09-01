@@ -1,6 +1,6 @@
 -- LeonOS installer
 local INSTALLER_VERSION = "0.1.5"
-local DEFAULT_ROM_DIR = "/leonos"
+local DEFAULT_ROM_DIR = "/rc"
 
 print("Start loading LeonOS installer...")
 print("[Installer] Loading module 1")

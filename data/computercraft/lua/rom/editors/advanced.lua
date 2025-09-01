@@ -87,7 +87,7 @@ local function redraw()
 end
 
 local syntax = require("edit.syntax")
-  .new("/leonos/modules/main/edit/syntax/lua.lua")
+  .new("/rc/modules/main/edit/syntax/lua.lua")
 
 local function rehighlight()
   local line = {}
