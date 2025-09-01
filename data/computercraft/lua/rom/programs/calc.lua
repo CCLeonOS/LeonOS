@@ -19,7 +19,7 @@ local function drawTopBar()
     term.setCursorPos(1, 1)
     
     -- Draw top bar with centered title
-    local title = " LeonOS Calculator "
+    local title = "=== LeonOS Calculator ==="
     local padding = math.floor((w - #title) / 2)
     term.write(string.rep(" ", padding) .. title .. string.rep(" ", padding))
     
