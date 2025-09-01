@@ -1,5 +1,5 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "0.2.0"
+local INSTALLER_VERSION = "0.2.1"
 local DEFAULT_ROM_DIR = "/leonos"
 
 print("Start loading LeonOS installer ("..INSTALLER_VERSION..")...")
@@ -120,7 +120,7 @@ end
 
 bullet("Getting repository tree...")
 
-local repodata = dl("https://api.github.com/repos/Leonmmcoset/LeonOS/git/trees/main?recursive=1")
+local repodata = dl("https://gh.catmak.name/https://api.github.com/repos/Leonmmcoset/LeonOS/git/trees/main?recursive=1")
 
 repodata = json.decode(repodata)
 
