@@ -1,6 +1,4 @@
 _G._HOST = _G._HOST .. " (LeonOS 0.1.2)"
-print("LeonBIOS")
-print("Starting...")
 local fs = rawget(_G, "fs")
 
 _G._RC_ROM_DIR = _RC_ROM_DIR or (...) and fs.exists("/rc") and "/rc" or "/rom"
