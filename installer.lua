@@ -1,6 +1,7 @@
 -- LeonOS installer
-
+local INSTALLER_VERSION = "0.1.1"
 local DEFAULT_ROM_DIR = "/rc"
+
 print("Start loading LeonOS installer...")
 print("[Installer] Loading module 1")
 local function dl(f)
@@ -86,7 +87,7 @@ for y=2, term.getSize() do
 end
 term.at(1, 2)
 tu.coloredPrint(colors.yellow,
-  "LeonOS Installer (v".._VERSION..")\n=======================")
+  "LeonOS Installer (v"..INSTALLER_VERSION..")\n=======================")
 tu.coloredPrint("You are going to install LeonOS to your computer.")
 tu.coloredPrint("This will ",colors.red,"overwrite any existing files", colors.white, " in the installation directory.")
 tu.coloredPrint(colors.yellow, "Are you sure? (y/n)")
