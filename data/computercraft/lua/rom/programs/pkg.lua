@@ -381,4 +381,12 @@ local function main(args)
 end
 
 -- 运行主函数
-main({...})
+local args = {...}
+-- 过滤掉可能的空参数
+local filtered_args = {}
+for _, arg in ipairs(args) do
+  if arg and arg ~= "" then
+    table.insert(filtered_args, arg)
+  end
+end
+main(filtered_args)
