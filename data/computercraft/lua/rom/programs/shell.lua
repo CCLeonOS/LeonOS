@@ -74,28 +74,28 @@ for k, v in pairs(aliases) do
   shell.setAlias(k, v)
 end
 
-local completions = "/rc/completions"
+local completions = "/leonos/completions"
 for _, prog in ipairs(fs.list(completions)) do
   dofile(fs.combine(completions, prog))
 end
 
 local history = {}
 while true do
-  if #text > 0 then
-    -- 先清除控制台内容，但保留顶部应用栏
-    local w, h = term.getSize()
-    term.setTextColor(colors.white)
-    term.setBackgroundColor(colors.black)
-    for y=2, h do
-      term.at(1, y).clearLine()
-    end
-    term.at(1, 2)
-    
-    term.setTextColor(colors.yellow)
-    rc.write("$ "..shell.dir().." >>> ")
-    term.setTextColor(colors.white)
+  -- 先清除控制台内容，但保留顶部应用栏
+  local w, h = term.getSize()
+  term.setTextColor(colors.white)
+  term.setBackgroundColor(colors.black)
+  for y=2, h do
+    term.at(1, y).clearLine()
+  end
+  term.at(1, 2)
+  
+  term.setTextColor(colors.yellow)
+  rc.write("$ "..shell.dir().." >>> ")
+  term.setTextColor(colors.white)
 
-    local text = term.read(nil, history, shell.complete)
+  local text = term.read(nil, history, shell.complete)
+  if #text > 0 then
     history[#history+1] = text
     local ok, err = shell.run(text)
     if not ok and err then
