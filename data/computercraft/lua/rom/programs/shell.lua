@@ -74,7 +74,7 @@ for k, v in pairs(aliases) do
   shell.setAlias(k, v)
 end
 
-local completions = "/rc/completions"
+local completions = "/leonos/completions"
 for _, prog in ipairs(fs.list(completions)) do
   dofile(fs.combine(completions, prog))
 end
