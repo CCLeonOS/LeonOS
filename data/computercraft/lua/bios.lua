@@ -1,4 +1,4 @@
-_G._HOST = _G._HOST .. " (LeonOS 0.2.3)"
+_G._HOST = _G._HOST .. " (LeonOS 0.2.4)"
 local fs = rawget(_G, "fs")
 
 _G._RC_ROM_DIR = _RC_ROM_DIR or (...) and fs.exists("/leonos") and "/leonos" or "/rom"
@@ -32,7 +32,7 @@ local rc = {
   _VERSION = {
     major = 0,
     minor = 2,
-    patch = 3
+    patch = 4
   },
   queueEvent  = pull(os, "queueEvent"),
   startTimer  = pull(os, "startTimer"),
