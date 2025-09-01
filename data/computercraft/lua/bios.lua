@@ -177,4 +177,3 @@ expect = require("cc.expect").expect
 
 local thread = require("rc.thread")
 thread.start()
-print("[OK] Computer load&check system done. Starting operating system...")
