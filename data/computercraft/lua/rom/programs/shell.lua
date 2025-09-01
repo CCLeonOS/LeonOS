@@ -3,12 +3,14 @@
 -- 程序顶部名称栏
 local term = require("term")
 local colors = require("colors")
+local window = require("window")
 
 -- 保存当前颜色设置
 local old_fg = term.getTextColor()
 local old_bg = term.getBackgroundColor()
 
 -- 设置名称栏颜色并显示
+  term.setCursorPos(1, 1)
 term.setTextColor(colors.white)
 term.setBackgroundColor(colors.cyan)
 term.at(1, 1).clearLine()
@@ -100,9 +102,99 @@ while true do
     end
     term.at(1, 2)
     
+    -- 定义错误处理函数
+    local function showErrorWindow(errorMessage, command)
+      local w, h = term.getSize()
+      local winWidth, winHeight = 50, 12
+      local x = math.floor((w - winWidth) / 2)
+      local y = math.floor((h - winHeight) / 2)
+
+      -- 创建错误窗口
+      local errWindow = window.create(term.native(), x, y, winWidth, winHeight)
+      errWindow.setVisible(true)
+
+      -- 绘制窗口边框和标题
+      errWindow.setBackgroundColor(colors.red)
+      errWindow.setTextColor(colors.white)
+      errWindow.at(1, 1).clearLine()
+      errWindow.at(1, 1).write("=== 程序错误 ===")
+
+      -- 绘制窗口内容背景
+      errWindow.setBackgroundColor(colors.black)
+      for line=2, winHeight-1 do
+        errWindow.at(1, line).clearLine()
+      end
+
+      -- 显示错误信息（自动换行）
+      errWindow.setTextColor(colors.red)
+      errWindow.at(2, 2).write("错误信息:")
+      errWindow.setTextColor(colors.white)
+
+      local lineNum = 3
+      local maxLineLength = winWidth - 4
+      local messageLines = {}
+      local currentLine = ""
+
+      for word in errorMessage:gmatch("[^\s]+") do
+        if #currentLine + #word + 1 > maxLineLength then
+          table.insert(messageLines, currentLine)
+          currentLine = word
+        else
+          if currentLine == "" then
+            currentLine = word
+          else
+            currentLine = currentLine .. " " .. word
+          end
+        end
+      end
+      if currentLine ~= "" then
+        table.insert(messageLines, currentLine)
+      end
+
+      for _, line in ipairs(messageLines) do
+        if lineNum < winHeight - 2 then
+          errWindow.at(2, lineNum).write(line)
+          lineNum = lineNum + 1
+        else
+          errWindow.at(2, lineNum).write("...")
+          break
+        end
+      end
+
+      -- 绘制按钮
+      errWindow.setBackgroundColor(colors.gray)
+      errWindow.setTextColor(colors.white)
+      errWindow.at(5, winHeight-1).write("  确认  ")
+      errWindow.at(30, winHeight-1).write("  重新运行  ")
+
+      -- 处理用户输入
+      while true do
+        local event, button, xPos, yPos = os.pullEvent("mouse_click")
+        if yPos == winHeight-1 + y - 1 then
+          -- 点击确认按钮
+          if xPos >= x + 5 and xPos <= x + 12 then
+            errWindow.setVisible(false)
+            break
+          end
+          -- 点击重新运行按钮
+          if xPos >= x + 30 and xPos <= x + 42 then
+            errWindow.setVisible(false)
+            return true
+          end
+        end
+      end
+      return false
+    end
+
     local ok, err = shell.run(text)
     if not ok and err then
-      io.stderr:write("Application has a error when running and system has stop it. Error:\n", err, "\n")
+      local shouldRetry = showErrorWindow(err, text)
+      if shouldRetry then
+        history[#history] = nil -- 移除当前命令，避免历史记录重复
+        term.at(1, 2).clearLine()
+        goto continue -- 重新运行命令
+      end
     end
+    ::continue::
   end
 end

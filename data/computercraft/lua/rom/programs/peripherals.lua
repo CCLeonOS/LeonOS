@@ -20,7 +20,7 @@ term.at(1, 2)
 local peripheral = require("peripheral")
 
 term.setTextColor(colors.yellow)
-print("已连接的外设")
+print("Connected Peripherals:")
 term.setTextColor(colors.white)
 local names = peripheral.getNames()
 
