@@ -56,7 +56,13 @@ function rc.shutdown()
 end
 
 function rc.reboot()
-  reboot()
+  -- Try to use os.reboot if available
+  if os.reboot then
+    os.reboot()
+  else
+    -- Fallback to shutdown if reboot isn't available
+    shutdown()
+  end
   while true do coroutine.yield() end
 end
 local timer_filter = {}
