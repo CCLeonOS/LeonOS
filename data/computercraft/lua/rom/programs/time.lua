@@ -7,14 +7,15 @@ local function printHelp()
   print("Options:")
   print("  --help, -h       Show this help message")
   print("  --format, -f <fmt>  Specify time format string (see below for details)")
-  print("
-Formats for --format option:")
-  print("  %Y: Year (4 digits)")
-  print("  %m: Month (01-12)")
-  print("  %d: Day (01-31)")
-  print("  %H: Hour (00-23)")
-  print("  %M: Minute (00-59)")
-  print("  %S: Second (00-59)")
+  print([[
+Formats for --format option:
+  %Y: Year (4 digits)
+  %m: Month (01-12)
+  %d: Day (01-31)
+  %H: Hour (00-23)
+  %M: Minute (00-59)
+  %S: Second (00-59)
+]])
   print("  %A: Full weekday name")
   print("  %B: Full month name")
   print("

@@ -2,7 +2,7 @@
 local http = require("http")
 local paintutils = require("paintutils")
 local term = require("term")
-local event = require("event")
+
 local shell = require("shell")
 
 -- 帮助信息函数
@@ -78,7 +78,7 @@ local function main(args)
 
   -- 监听ESC键
   while true do
-    local _, key = event.pull("key")
+    local _, key = os.pullEvent("key")
     if key == 27 then -- ESC键
       term.clear()
       term.setCursorPos(1, 1)
