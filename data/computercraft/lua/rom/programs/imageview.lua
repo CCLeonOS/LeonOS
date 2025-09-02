@@ -1,4 +1,6 @@
 -- imageview.lua: Image viewer that loads from URL
+-- This program uses paintutils library for image handling (CC Tweaked standard)
+-- There is no 'image' API; we use paintutils.loadImage and paintutils.drawImage
 local http = require("http")
 local paintutils = require("paintutils")
 local term = require("term")
@@ -59,6 +61,7 @@ local function main(args)
 
   if not success then
     print("Error loading image: " .. image)
+  print("Make sure the URL points to a valid image file compatible with CC Tweaked.")
     return
   end
 

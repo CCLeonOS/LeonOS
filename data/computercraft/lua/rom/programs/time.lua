@@ -18,11 +18,12 @@ Formats for --format option:
 ]])
   print("  %A: Full weekday name")
   print("  %B: Full month name")
-  print("
-Examples:")
-  print("  time                     # Show current time in default format")
-  print("  time --format '%Y-%m-%d %H:%M:%S'  # Show time as YYYY-MM-DD HH:MM:SS")
-  print("  time -f '%A, %B %d, %Y'  # Show time as 'Monday, January 01, 2023'")
+  print([[
+Examples:
+  time                     # Show current time in default format
+  time --format '%Y-%m-%d %H:%M:%S'  # Show time as YYYY-MM-DD HH:MM:SS
+  time -f '%A, %B %d, %Y'  # Show time as 'Monday, January 01, 2023'
+]])
 end
 
 -- 主函数
