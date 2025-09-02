@@ -82,17 +82,17 @@ for _, prog in ipairs(fs.list(completions)) do
 end
 
 local history = {}
-local image = paintutils.parseImage([[
- f  f
+-- local image = paintutils.parseImage([[
+--  f  f
 
-f    f
- ffff
-]])
-paintutils.drawImage(image, term.getCursorPos())
-textutils.coloredPrint(colors.yellow, "Welcome using the beta version of LeonOS!", colors.white)
+-- f    f
+--  ffff
+-- ]])
+-- paintutils.drawImage(image, term.getCursorPos())
+-- textutils.coloredPrint(colors.yellow, "Welcome using the beta version of LeonOS!", colors.white)
 while true do
   term.setTextColor(colors.yellow)
-  rc.write("$ "..shell.dir().." >>> ")
+  rc.write("$ "..shell.dir().." # ")
   term.setTextColor(colors.white)
 
   local text = term.read(nil, history, shell.complete)
