@@ -1,5 +1,5 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "0.3.6 Beta 1"
+local INSTALLER_VERSION = "0.3.6 Beta 2"
 local DEFAULT_ROM_DIR = "/leonos"
 
 print("Start loading LeonOS installer ("..INSTALLER_VERSION..")...")
@@ -149,6 +149,12 @@ bullet("Creating directories...")
 local cache_dir = "/packages/cache"
 if not fs.exists(cache_dir) then
   fs.makeDir(cache_dir)
+end
+
+-- 确保应用目录存在
+local app_dir = "/app"
+if not fs.exists(app_dir) then
+  fs.makeDir(app_dir)
 end
 for i=#to_dl, 1, -1 do
   local v = to_dl[i]

@@ -134,9 +134,15 @@ local function install_package(pkg_name, options)
 
   -- 安装文件
   print("Installing version: " .. latest_version)
+  -- 确保app目录存在
+  local app_dir = "/app"
+  if not fs.exists(app_dir) then
+    fs.makeDir(app_dir)
+  end
+  
   for _, file_path in ipairs(meta.files or {}) do
     local src = fs.combine(version_path, file_path)
-    local dest = fs.combine("/rom", file_path)
+    local dest = fs.combine(app_dir, file_path)
     
     -- 确保目标目录存在
     local dest_dir = fs.getDir(dest)
