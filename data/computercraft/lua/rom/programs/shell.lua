@@ -69,7 +69,8 @@ local aliases = {
   sh = "shell",
   ps = "threads",
   restart = "reboot",
-  version = "ver"
+  version = "ver",
+  package = "pkg"
 }
 
 for k, v in pairs(aliases) do
