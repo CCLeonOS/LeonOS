@@ -8,8 +8,8 @@ local function printHelp()
   print("Options:")
   print("  --help, -h    Show this help message")
   print("  --verbose, -v Show command file paths")
-  print("
-Lists all available commands in LeonOS.")
+  print([[
+Lists all available commands in LeonOS.]])
 end
 
 -- 主函数
