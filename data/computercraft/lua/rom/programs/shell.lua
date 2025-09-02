@@ -27,24 +27,9 @@ local textutils = require("textutils")
 
 if os.version then
   textutils.coloredPrint(colors.yellow, os.version(), colors.white)
-  local image = paintutils.parseImage([[
- f  f
-
-f    f
- ffff
-  ]])
-  paintutils.drawImage(image, term.getCursorPos())
 else
   textutils.coloredPrint(colors.yellow, rc.version(), colors.white)
-    local image = paintutils.parseImage([[
- f  f
-
-f    f
- ffff
-  ]])
-  paintutils.drawImage(image, term.getCursorPos())
 end
-textutils.coloredPrint(colors.yellow, "Welcome using the beta version of LeonOS!", colors.white)
 
 thread.vars().parentShell = thread.id()
 shell.init(_ENV)
@@ -97,6 +82,14 @@ for _, prog in ipairs(fs.list(completions)) do
 end
 
 local history = {}
+local image = paintutils.parseImage([[
+ f  f
+
+f    f
+ ffff
+]])
+paintutils.drawImage(image, term.getCursorPos())
+textutils.coloredPrint(colors.yellow, "Welcome using the beta version of LeonOS!", colors.white)
 while true do
   term.setTextColor(colors.yellow)
   rc.write("$ "..shell.dir().." >>> ")
