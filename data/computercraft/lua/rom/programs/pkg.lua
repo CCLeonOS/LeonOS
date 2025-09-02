@@ -26,9 +26,9 @@ term.at(1, 2)
 -- 包管理器配置
 local pkg_config = {
   repo_url = "https://example.com/leonos/packages", -- 包仓库URL
-  local_pkg_dir = "/leonos/packages",                  -- 本地包存储目录
-  installed_db = "/leonos/packages/installed.json",    -- 已安装包数据库
-  cache_dir = "/leonos/cache"                          -- 缓存目录
+  local_pkg_dir = "/packages",                     -- 本地包存储目录
+  installed_db = "/packages/installed.json",       -- 已安装包数据库
+  cache_dir = "/rom/cache"                          -- 缓存目录
 }
 
 -- 确保必要的目录存在
@@ -136,7 +136,7 @@ local function install_package(pkg_name, options)
   print("Installing version: " .. latest_version)
   for _, file_path in ipairs(meta.files or {}) do
     local src = fs.combine(version_path, file_path)
-    local dest = fs.combine("/leonos", file_path)
+    local dest = fs.combine("/rom", file_path)
     
     -- 确保目标目录存在
     local dest_dir = fs.getDir(dest)
@@ -250,7 +250,7 @@ local function remove_package(pkg_name)
     if ok and meta then
       -- 删除包文件
       for _, file_path in ipairs(meta.files or {}) do
-        local dest = fs.combine("/leonos", file_path)
+        local dest = fs.combine("/rom", file_path)
         if fs.exists(dest) then
           fs.delete(dest)
           print("Removed: " .. file_path)

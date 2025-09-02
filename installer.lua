@@ -1,5 +1,5 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "0.3.5"
+local INSTALLER_VERSION = "0.3.6"
 local DEFAULT_ROM_DIR = "/leonos"
 
 print("Start loading LeonOS installer ("..INSTALLER_VERSION..")...")
@@ -114,6 +114,7 @@ local function bullet(t)
   tu.coloredWrite(colors.red, "- ", colors.white, t)
 end
 
+-- Function for "xxx...OK"
 local function ok()
   tu.coloredPrint(colors.green, "OK", colors.white)
 end
@@ -132,7 +133,12 @@ local to_dl = {}
 for _, v in pairs(repodata.tree) do
   if v.path and v.path:sub(1,#look) == look then
     v.path = v.path:sub(#look+1)
-    v.real_path = v.path:gsub("^/?rom", ROM_DIR)
+    -- 特殊处理packages文件夹，将其放在根目录
+    if v.path:sub(1, 9) == "packages/" then
+      v.real_path = v.path
+    else
+      v.real_path = v.path:gsub("^/?rom", ROM_DIR)
+    end
     to_dl[#to_dl+1] = v
   end
 end
