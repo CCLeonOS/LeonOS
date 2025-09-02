@@ -3,7 +3,6 @@
 local fs = require("fs")
 local tu = require("textutils")
 local shell = require("shell")
-local read = require("read")
 
 local function show_help()
   print("Usage: appdelete <application_name> [options]")
@@ -41,7 +40,7 @@ local function delete_app(app_name, force)
   -- 确认删除
   if not force then
     print("Are you sure you want to delete '" .. app_name .. "'? (y/n)")
-    local confirm = read()
+    local confirm = io.read()
     if confirm ~= "y" and confirm ~= "yes" then
       print("Deletion cancelled.")
       return false
