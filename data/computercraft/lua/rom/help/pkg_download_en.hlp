@@ -1,0 +1,91 @@
+=== How to Download Packages ===
+
+In LeonOS, you can use the `pkg` command to download and install software packages. This help document will detailed explain how to use this command.
+
+== Basic Usage ==
+
+Download and install a package:
+```
+pkg install <package_name>
+```
+
+== Command Options ==
+
+The `pkg install` command supports the following options:
+
+- `-f`, `--force`: Force installation, overwrite existing files
+- `-v`, `--verbose`: Show detailed installation process
+- `-h`, `--help`: Show help information
+
+== Usage Examples ==
+
+1. Install a package:
+```
+pkg install example-package
+```
+
+2. Force install a package:
+```
+pkg install --force example-package
+```
+
+3. Install a package with detailed information:
+```
+pkg install -v example-package
+```
+
+4. View help for `pkg install` command:
+```
+pkg install --help
+```
+
+== Search for Packages ==
+
+Before installing a package, you can search for available packages:
+```
+pkg search <search_keyword>
+```
+
+Example:
+```
+pkg search editor
+```
+
+== View Package Information ==
+
+Before installing a package, you can view detailed information about it:
+```
+pkg info <package_name>
+```
+
+Example:
+```
+pkg info example-package
+```
+
+== Update Packages ==
+
+You can update installed packages using the following command:
+```
+pkg update <package_name>
+```
+
+If you don't specify a package name, all installed packages will be updated:
+```
+pkg update
+```
+
+== Frequently Asked Questions ==
+
+Q: What should I do if I encounter a network error when downloading a package?
+A: Please check your network connection to ensure you can access the Internet. If the problem persists, please try again later.
+
+Q: How can I view installed packages?
+A: You can use the `pkg list` command to view all installed packages.
+
+Q: Where can I get package names?
+A: You can search for packages using the `pkg search` command or check the official package repository list.
+
+== Exit Help ==
+
+Press the ESC key to exit the help document.
