@@ -6,7 +6,6 @@
   "license": "MIT",
   "dependencies": {},
   "files": [
-    "programs/example.lua",
-    "completions/example.lua"
+    "example.lua"
   ]
 }

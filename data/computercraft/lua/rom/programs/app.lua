@@ -1,5 +1,8 @@
 -- app.lua - Application launcher for LeonOS
 local fs = require("fs")
+local shell = require("shell")
+local applist = require("applist")
+
 local function show_help()
   print("Usage: app <program_name> [arguments]")
   print("Runs an application from the /app directory")
