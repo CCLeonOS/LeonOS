@@ -2,6 +2,8 @@
 
 local fs = require("fs")
 local tu = require("textutils")
+local shell = require("shell")
+local read = require("read")
 
 local function show_help()
   print("Usage: appdelete <application_name> [options]")
