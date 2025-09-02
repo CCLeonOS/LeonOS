@@ -10,9 +10,10 @@ local function printHelp()
   print("Usage: imageview <image_url>")
   print("Options:")
   print("  --help, -h    Show this help message")
-  print("
+  print([[
 Displays an image from the specified URL.
-Press ESC to exit back to shell.")
+Press ESC to exit back to shell.
+]])
 end
 
 -- 下载图片函数
