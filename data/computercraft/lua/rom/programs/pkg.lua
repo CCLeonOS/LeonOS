@@ -62,7 +62,7 @@ end
 local function save_installed_db(db)
   local file = io.open(pkg_config.installed_db, "w")
   if file then
-    file:write(textutils.serializeJSON(db, { pretty = true }))
+    file:write(textutils.serializeJSON(db, false))
     file:close()
     return true
   end
