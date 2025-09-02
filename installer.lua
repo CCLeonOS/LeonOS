@@ -145,6 +145,11 @@ end
 ok()
 
 bullet("Creating directories...")
+-- 确保缓存目录存在
+local cache_dir = "/packages/cache"
+if not fs.exists(cache_dir) then
+  fs.makeDir(cache_dir)
+end
 for i=#to_dl, 1, -1 do
   local v = to_dl[i]
   if v.type == "tree" then

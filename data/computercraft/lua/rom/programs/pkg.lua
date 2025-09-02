@@ -28,7 +28,7 @@ local pkg_config = {
   repo_url = "https://example.com/leonos/packages", -- 包仓库URL
   local_pkg_dir = "/packages",                     -- 本地包存储目录
   installed_db = "/packages/installed.json",       -- 已安装包数据库
-  cache_dir = "/rom/cache"                          -- 缓存目录
+  cache_dir = "/packages/cache"                     -- 缓存目录
 }
 
 -- 确保必要的目录存在
