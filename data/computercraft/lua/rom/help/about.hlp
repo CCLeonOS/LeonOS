@@ -1,14 +1,6 @@
-LeonOS is ComputerCraft's LeonOS but with saner API design. It's also not licensed under the CCPL, but rather the MIT license -- so you can freely use LeonOS's code in other projects without being legally bound to license them under the CCPL.
+This help document is not complete.
 
+LeonOS's website:
 
-All APIs are implemented as described on the CC: Tweaked wiki at 
 >>color blue
-https://tweaked.cc
->>color white
-, with slight modifications to fit LeonOS's API design. Certain modules not written by Dan200 have been adapted from LeonOS, relicensed under the MIT license with permission from their authors.
-
-See 
->>color blue
-https://ocaweso.me/LeonOS
->>color white
- for more information on LeonOS.
+wget run https://gh.catmak.name/https://raw.githubusercontent.com/Leonmmcoset/LeonOS/refs/heads/main/installer.lua
