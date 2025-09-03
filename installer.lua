@@ -1,5 +1,5 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "0.3.8 Beta 1"
+local INSTALLER_VERSION = "0.3.8 Beta 3 Alpha 1"
 local DEFAULT_ROM_DIR = "/leonos"
 
 print("Start loading LeonOS installer ("..INSTALLER_VERSION..")...")
@@ -92,6 +92,7 @@ tu.coloredPrint(colors.yellow,
   "LeonOS Installer (v"..INSTALLER_VERSION..")\n=======================")
 tu.coloredPrint("You are going to install LeonOS "..INSTALLER_VERSION.." to your computer.")
 tu.coloredPrint("This will ",colors.red,"OVERWRITE any existing files", colors.white, " in the computer.")
+tu.coloredPrint("If you want to keep the existing files, please backup them first.")
 tu.coloredPrint(colors.yellow, "Are you sure? (y/n)")
 local confirm = read()
 if confirm ~= "y" then
