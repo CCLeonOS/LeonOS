@@ -320,9 +320,15 @@ function TextField:draw()
   -- Draw cursor
   if self.focused and self.enabled then
     term.setCursorPos(self.x + self.cursorPosDisplay, self.y)
-    term.blink(true)
-  else
-    term.blink(false)
+    -- CC Tweaked doesn't support term.blink, so we'll invert the colors instead
+    local currentFg = term.getTextColor()
+    local currentBg = term.getBackgroundColor()
+    term.setTextColor(currentBg)
+    term.setBackgroundColor(currentFg)
+    term.write(" ")
+    term.setTextColor(currentFg)
+    term.setBackgroundColor(currentBg)
+    term.setCursorPos(self.x + self.cursorPosDisplay, self.y)
   end
 
   term.setTextColor(oldFg)
