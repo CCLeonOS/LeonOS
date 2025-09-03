@@ -9,11 +9,8 @@ local function getHistory()
   -- Search for the shell thread to access its history
   local thread = require("rc.thread")
   local shellThread = thread.vars().parentShell
-  if shellThread then
-    local env = thread.getenv(shellThread)
-    if env and env.history then
-      return env.history
-    end
+  if shellThread and shellThread.env and shellThread.env.history then
+    return shellThread.env.history
   end
   -- Fallback to empty history if not found
   return {}

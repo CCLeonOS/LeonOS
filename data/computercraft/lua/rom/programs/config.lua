@@ -31,10 +31,12 @@ local function show_help()
   print("  set <setting> <value>  Set the value of a specific setting")
   print("  default <setting>      Reset a setting to its default value")
   print("  save                   Save current settings to file")
+  print("  find <pattern>         Find settings by name or description")
   print("  help                   Show this help message")
   print("")
   print("Options:")
   print("  --details, -d          Show detailed information when listing settings")
+  print("  --case-insensitive, -i Search case-insensitively")
   print("")
   print("Examples:")
   print("  config list                           # List all settings")
@@ -42,6 +44,8 @@ local function show_help()
   print("  config get list.show_hidden           # Get the value of list.show_hidden")
   print("  config set list.show_hidden true      # Set list.show_hidden to true")
   print("  config default list.show_hidden       # Reset list.show_hidden to default")
+  print("  config find 'hidden'                  # Find settings containing 'hidden'")
+  print("  config find 'color' -i                # Find settings with 'color' (case-insensitive)")
   print("  config save                           # Save current settings")
 end
 
@@ -154,6 +158,71 @@ local function save_settings()
   end
 end
 
+-- 查找设置
+local function find_settings(pattern, detailed, case_insensitive)
+  local setting_names = settings.getNames()
+  if #setting_names == 0 then
+    print("No settings defined.")
+    return
+  end
+
+  local matches = {}
+  local search_pattern = pattern
+  
+  if case_insensitive then
+    search_pattern = search_pattern:lower()
+  end
+
+  -- 搜索匹配的设置
+  for _, name in ipairs(setting_names) do
+    local details = settings.getDetails(name)
+    if details then
+      local name_match = false
+      local desc_match = false
+      
+      if case_insensitive then
+        name_match = name:lower():find(search_pattern, 1, true) ~= nil
+        if details.description then
+          desc_match = details.description:lower():find(search_pattern, 1, true) ~= nil
+        end
+      else
+        name_match = name:find(search_pattern, 1, true) ~= nil
+        if details.description then
+          desc_match = details.description:find(search_pattern, 1, true) ~= nil
+        end
+      end
+      
+      if name_match or desc_match then
+        table.insert(matches, {name = name, details = details, name_match = name_match, desc_match = desc_match})
+      end
+    end
+  end
+
+  if #matches == 0 then
+    print("No settings found matching pattern '" .. pattern .. "'")
+    return
+  end
+
+  print("Found " .. #matches .. " matching setting" .. (#matches > 1 and "s" or "") .. ":")
+  print("====================")
+
+  for _, match in ipairs(matches) do
+    term.setTextColor(colors.yellow)
+    print(match.name)
+    term.setTextColor(colors.white)
+
+    if detailed then
+      print("  Description: " .. (match.details.description or "No description"))
+      print("  Type: " .. (match.details.type or "unknown"))
+      print("  Default: " .. tostring(match.details.default))
+      print("  Current: " .. tostring(match.details.value))
+    else
+      print("  Current: " .. tostring(match.details.value) .. ", Default: " .. tostring(match.details.default))
+    end
+    print("----------------")
+  end
+end
+
 -- 主函数
 local function main(args)
   if #args == 0 then
@@ -163,13 +232,19 @@ local function main(args)
 
   local command = args[1]
   local detailed = false
+  local case_insensitive = false
 
-  -- 检查是否有--details或-d选项
-  for i, arg in ipairs(args) do
-    if arg == "--details" or arg == "-d" then
+  -- 检查是否有选项
+  local i = 2
+  while i <= #args do
+    if args[i] == "--details" or args[i] == "-d" then
       detailed = true
       table.remove(args, i)
-      break
+    elseif args[i] == "--case-insensitive" or args[i] == "-i" then
+      case_insensitive = true
+      table.remove(args, i)
+    else
+      i = i + 1
     end
   end
 
@@ -183,6 +258,8 @@ local function main(args)
     default_setting(args[2])
   elseif command == "save" then
     save_settings()
+  elseif command == "find" and #args >= 2 then
+    find_settings(args[2], detailed, case_insensitive)
   elseif command == "help" or command == "--help" or command == "-h" then
     show_help()
   else

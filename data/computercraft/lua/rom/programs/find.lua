@@ -56,8 +56,8 @@ local function matches_pattern(str, pattern, case_insensitive)
 
   -- 转换通配符模式为Lua正则表达式
   pattern = pattern:gsub("%.", "%%.")
-                  :gsub("%*\%\*", "%.%")
-                  :gsub("%*", "[^"]*")
+                  :gsub("%*%%%*", ".*")
+                  :gsub("%*", "[^/]*")
                   :gsub("%?", ".")
 
   return str:match("^" .. pattern .. "$") ~= nil
