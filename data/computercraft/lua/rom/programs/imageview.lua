@@ -60,8 +60,8 @@ local function main(args)
   end)
 
   if not success then
-    print("Error loading image: " .. image)
-  print("Make sure the URL points to a valid image file compatible with CC Tweaked.")
+    print("Error loading image: " .. tostring(image))
+    print("Make sure the URL points to a valid image file compatible with CC Tweaked.")
     return
   end
 
@@ -79,9 +79,15 @@ local function main(args)
 
   print("\nImage displayed. Press ESC to exit.")
 
-  -- 监听ESC键
+  -- 安全地监听ESC键
   while true do
-    local _, key = os.pullEvent("key")
+    -- 使用安全的事件拉取函数
+    local pullEventFunc = os.pullEvent or os.pullEventRaw
+    if not pullEventFunc then
+      error("No valid event pulling function found")
+    end
+    
+    local event, key = table.unpack({pullEventFunc("key")})
     if key == 27 then -- ESC键
       term.clear()
       term.setCursorPos(1, 1)

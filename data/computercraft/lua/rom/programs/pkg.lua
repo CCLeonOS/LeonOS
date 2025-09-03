@@ -60,7 +60,7 @@ local function create_package(pkg_name)
   }
   local json_file = io.open(fs.combine(version_dir, "package.json"), "w")
   if json_file then
-    json_file:write(textutils.serializeJSON(package_json, true))
+    json_file:write(textutils.serializeJSON(package_json, false))
     json_file:close()
     print("Created package.json")
   else

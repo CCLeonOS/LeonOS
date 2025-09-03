@@ -592,13 +592,18 @@ end
 
 function GUIManager:handleEvents()
   while self.running do
-    -- Safely get the pullEvent function with fallback to rc.pullEvent
+    -- Safely get the pullEvent function with multiple fallbacks
     local pullEventFunc = os.pullEvent
     if type(pullEventFunc) ~= "function" then
-      -- Try using rc.pullEvent as fallback
-      pullEventFunc = rc and rc.pullEvent
-      if type(pullEventFunc) ~= "function" then
-        error("Neither os.pullEvent nor rc.pullEvent is available")
+      -- Try using rc.pullEvent as fallback if rc is available
+      if rc and type(rc.pullEvent) == "function" then
+        pullEventFunc = rc.pullEvent
+      else
+        -- In CC Tweaked, os.pullEventRaw is always available
+        pullEventFunc = os.pullEventRaw
+        if type(pullEventFunc) ~= "function" then
+          error("No valid event pulling function found. Ensure you're running in a CC Tweaked environment.")
+        end
       end
     end
     
