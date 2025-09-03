@@ -124,12 +124,12 @@ For more information on publishing, see the documentation for your chosen reposi
 Let's create a simple package called "greeting":
 
 1. Create the package:
-   >>color yellow
+>>color yellow
    pkg init greeting
-   >>color white
+>>color white
 
 2. Edit package.json:
-   >>color yellow
+>>color yellow
    {
      "name": "greeting",
      "version": "1.0.0",
@@ -141,10 +141,10 @@ Let's create a simple package called "greeting":
        "sayHello": "sayHello"
      }
    }
-   >>color white
+>>color white
 
 3. Edit greeting.lua:
-   >>color yellow
+>>color yellow
    -- greeting.lua
 
    local greeting = {}
@@ -154,21 +154,21 @@ Let's create a simple package called "greeting":
    end
 
    return greeting
-   >>color white
+>>color white
 
 4. Test the package:
-   >>color yellow
+>>color yellow
    -- test_greeting.lua
    local greeting = require("greeting")
    print(greeting.sayHello("User"))
-   >>color white
+>>color white
 
    Run with: lua test_greeting.lua
 
 5. Install the package:
-   >>color yellow
+>>color yellow
    pkg install --local /packages/greeting/1.0.0/
-   >>color white
+>>color white
 
 Now your package is ready to use in other programs!
 
