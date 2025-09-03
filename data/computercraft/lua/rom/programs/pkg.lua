@@ -31,6 +31,86 @@ local pkg_config = {
   cache_dir = "/packages/cache"                     -- 缓存目录
 }
 
+-- 创建新包
+local function create_package(pkg_name)
+  print("Creating new package: " .. pkg_name)
+
+  -- 确保包目录存在
+  local pkg_version = "1.0.0"
+  local pkg_dir = fs.combine(pkg_config.local_pkg_dir, pkg_name)
+  local version_dir = fs.combine(pkg_dir, pkg_version)
+  if not fs.exists(pkg_dir) then
+    fs.makeDir(pkg_dir)
+  end
+  if not fs.exists(version_dir) then
+    fs.makeDir(version_dir)
+  end
+
+  -- 创建package.json文件
+  local package_json = {
+    name = pkg_name,
+    version = pkg_version,
+    description = "A new package for LeonOS",
+    author = "LeonOS User",
+    license = "MIT",
+    dependencies = {},
+    files = {
+      pkg_name .. ".lua"
+    }
+  }
+  local json_file = io.open(fs.combine(version_dir, "package.json"), "w")
+  if json_file then
+    json_file:write(textutils.serializeJSON(package_json, true))
+    json_file:close()
+    print("Created package.json")
+  else
+    print("Error: Failed to create package.json")
+    return false
+  end
+
+  -- 创建主代码文件
+  local main_file_path = fs.combine(version_dir, pkg_name .. ".lua")
+  local main_file = io.open(main_file_path, "w")
+  if main_file then
+    local main_file_content = [[-- ]] .. pkg_name .. [[ Package
+local colors = require('colors')
+local term = require('term')
+
+function drawTopBar()
+  local w, h = term.getSize()
+  term.setBackgroundColor(colors.cyan)
+  term.setTextColor(colors.white)
+  term.setCursorPos(1, 1)
+  term.clearLine()
+  local title = "=== ]] .. pkg_name .. [[ v]] .. pkg_version .. [[ ==="
+  local pos = math.floor((w - #title) / 2) + 1
+  term.setCursorPos(pos, 1)
+  term.write(title)
+  term.setBackgroundColor(colors.black)
+  term.setTextColor(colors.white)
+  term.setCursorPos(1, 3)
+end
+
+drawTopBar()
+print("\nThis is the ]] .. pkg_name .. [[ package for LeonOS.")
+print("\nUsage:")
+print("  pkg install ]] .. pkg_name .. [[  - Install this package")
+print("  pkg remove ]] .. pkg_name .. [[   - Uninstall this package")
+print("  pkg list                 - List installed packages")
+]]
+    main_file:write(main_file_content)
+    main_file:close()
+    print("Created ]] .. pkg_name .. [[.lua")
+  else
+    print("Error: Failed to create ]] .. pkg_name .. [[.lua")
+    return false
+  end
+
+  print("Package created successfully at: " .. version_dir)
+  print("You can now edit the package files and install it with 'pkg install ]] .. pkg_name .. [['")
+  return true
+end
+
 -- 确保必要的目录存在
 local function ensure_dirs()
   if not fs.exists(pkg_config.local_pkg_dir) then
@@ -80,6 +160,7 @@ local function show_help()
   print("  list                 List all installed packages")
   print("  search <query>       Search for packages")
   print("  info <package>       Show package information")
+  print("  init <package>       Create a new package")
   print("  help                 Show this help message")
   print("")
   print("Options:")
@@ -377,6 +458,13 @@ local function main(args)
       show_help()
     else
       show_package_info(pkg_args[1])
+    end
+  elseif command == "init" then
+    if #pkg_args < 1 then
+      print("Error: Missing package name.")
+      show_help()
+    else
+      create_package(pkg_args[1])
     end
   elseif command == "help" then
     show_help()

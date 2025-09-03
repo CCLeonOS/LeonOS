@@ -592,10 +592,14 @@ end
 
 function GUIManager:handleEvents()
   while self.running do
-    -- Safely get the pullEvent function
+    -- Safely get the pullEvent function with fallback to rc.pullEvent
     local pullEventFunc = os.pullEvent
     if type(pullEventFunc) ~= "function" then
-      error("os.pullEvent is not a function")
+      -- Try using rc.pullEvent as fallback
+      pullEventFunc = rc and rc.pullEvent
+      if type(pullEventFunc) ~= "function" then
+        error("Neither os.pullEvent nor rc.pullEvent is available")
+      end
     end
     
     -- Get the next event
