@@ -51,6 +51,9 @@ local function show_help()
   print("  inventory, inv      - Show inventory")
   print("  select <slot>       - Select slot (1-16)")
   print("")
+  print("Fuel Commands:")
+  print("  refuel [amount]     - Refuel using items from inventory (optional amount)")
+  print("")
   print("Utility Commands:")
   print("  help, h             - Show this help message")
   print("  version, v          - Show program version")
@@ -184,6 +187,51 @@ local function select_slot(slot)
   end
 end
 
+-- 燃料命令
+local function refuel(amount)
+  expect(1, amount, "number", "nil")
+  amount = amount or 64 -- 默认使用最大数量
+
+  print("Current fuel level: " .. turtle.getFuelLevel() .. "/" .. turtle.getFuelLimit())
+  print("Searching for fuel...")
+
+  local initial_slot = turtle.getSelectedSlot()
+  local found_fuel = false
+
+  for slot = 1, 16 do
+    if turtle.getItemCount(slot) > 0 then
+      turtle.select(slot)
+      local itemDetail = turtle.getItemDetail()
+      if itemDetail and itemDetail.fuel then
+        found_fuel = true
+        print("Found fuel in slot " .. slot .. ": " .. itemDetail.name)
+        local fuelAmount = math.min(amount, turtle.getItemCount(slot))
+        print("Refueling with " .. fuelAmount .. " items...")
+        if turtle.refuel(fuelAmount) then
+          print(colors.green .. "Success! Fuel level: " .. turtle.getFuelLevel() .. colors.white)
+          if turtle.getFuelLevel() >= turtle.getFuelLimit() then
+            print("Fuel tank is full!")
+            break
+          end
+          amount = amount - fuelAmount
+          if amount <= 0 then
+            break
+          end
+        else
+          print(colors.red .. "Failed to refuel with this item." .. colors.white)
+        end
+      end
+    end
+  end
+
+  -- 恢复原来选中的槽位
+  turtle.select(initial_slot)
+
+  if not found_fuel then
+    print(colors.red .. "No fuel found in inventory." .. colors.white)
+  end
+end
+
 -- 主程序
 local args = {...}
 if #args == 0 then
@@ -231,6 +279,12 @@ else
       select_slot(tonumber(args[2]))
     else
       error("Missing slot number", 0)
+    end
+  elseif command == "refuel" then
+    if #args > 1 then
+      refuel(tonumber(args[2]))
+    else
+      refuel()
     end
   else
     error("Unknown command: " .. command, 0)

@@ -29,6 +29,9 @@ turtle <command> [arguments]
   - **inventory**, **inv**: Show inventory
   - **select** <slot>: Select slot (1-16)
 
+- **Fuel Commands:**
+  - **refuel** [amount]: Refuel using items from inventory (optional amount)
+
 - **Utility Commands:**
   - **help**, **h**: Show this help message
   - **version**, **v**: Show program version
@@ -73,6 +76,16 @@ turtle select 5
 8. Dig in all directions:
 >>color yellow
 turtle digall
+>>color white
+
+9. Refuel with maximum amount:
+>>color yellow
+turtle refuel
+>>color white
+
+10. Refuel with specific amount:
+>>color yellow
+turtle refuel 10
 >>color white
 
 == Notes ==
