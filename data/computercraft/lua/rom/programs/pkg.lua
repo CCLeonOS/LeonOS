@@ -100,9 +100,9 @@ print("  pkg list                 - List installed packages")
 ]]
     main_file:write(main_file_content)
     main_file:close()
-    print("Created ]] .. pkg_name .. [[.lua")
+    print("Created " .. pkg_name .. ".lua")
   else
-    print("Error: Failed to create ]] .. pkg_name .. [[.lua")
+    print("Error: Failed to create " .. pkg_name .. ".lua")
     return false
   end
 
