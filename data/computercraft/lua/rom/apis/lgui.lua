@@ -592,7 +592,14 @@ end
 
 function GUIManager:handleEvents()
   while self.running do
-    local event = {os.pullEvent()}
+    -- Safely get the pullEvent function
+    local pullEventFunc = os.pullEvent
+    if type(pullEventFunc) ~= "function" then
+      error("os.pullEvent is not a function")
+    end
+    
+    -- Get the next event
+    local event = {pullEventFunc()}
     local eventName = event[1]
     local handled = false
 
