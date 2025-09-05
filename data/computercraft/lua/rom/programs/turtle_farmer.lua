@@ -62,6 +62,7 @@ local function isInventoryFull()
     end
   end
   return empty_slots <= INVENTORY_FULL_THRESHOLD
+end
 
 
 -- 检查燃料是否充足
