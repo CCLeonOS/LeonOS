@@ -237,9 +237,10 @@ local function showTutorial()
 end
 
 -- 主程序
-local function main()
+local function main(...)  -- 改为可变参数函数
   -- 检查是否需要显示教程
-  if #({...}) > 0 and ({...})[1] == "tutorial" then
+  local args = {...}
+  if #args > 0 and args[1] == "tutorial" then
     showTutorial()
     return
   end
