@@ -65,6 +65,41 @@ local function isInventoryFull()
 end
 
 
+-- 从背包中寻找燃料并填充
+local function refuelFromInventory()
+  print(colors.yellow .. "Fuel low! Searching for fuel in inventory..." .. colors.white)
+  local initial_slot = turtle.getSelectedSlot()
+  local fuel_found = false
+  
+  -- 遍历所有16个背包槽位
+  for slot = 1, 16 do
+    if turtle.getItemCount(slot) > 0 then
+      turtle.select(slot)
+      local itemDetail = turtle.getItemDetail()
+      
+      -- 检查物品是否可以作为燃料
+      if itemDetail and itemDetail.fuel ~= nil and itemDetail.fuel > 0 then
+        print(colors.green .. "Found fuel in slot " .. slot .. ": " .. itemDetail.name .. " (" .. itemDetail.fuel .. " fuel)" .. colors.white)
+        
+        -- 填充燃料
+        local success = turtle.refuel(1)
+        if success then
+          print(colors.green .. "Refueled successfully! Current fuel: " .. turtle.getFuelLevel() .. colors.white)
+          fuel_found = true
+          break -- 找到燃料后退出循环
+        else
+          print(colors.red .. "Failed to refuel with slot " .. slot .. colors.white)
+        end
+      end
+    end
+  end
+  
+  -- 恢复原来选择的槽位
+  turtle.select(initial_slot)
+  
+  return fuel_found
+end
+
 -- 检查燃料是否充足
 local function checkFuel()
   local currentFuel = turtle.getFuelLevel()
@@ -75,7 +110,8 @@ local function checkFuel()
     return true
   end
   
-  return false
+  -- 尝试从背包中寻找燃料
+  return refuelFromInventory()
 end
 
 -- 检测前方是否有成熟的麦子
