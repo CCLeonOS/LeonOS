@@ -27,11 +27,30 @@ term.setBackgroundColor(old_bg)
 term.at(1, 2)
 
 -- 检查是否有比较器(comparator)连接
-local comparator = peripheral.find("comparator")
+local comparator = nil
 local peripherals = peripheral.getNames()
 
+-- 尝试通过不同方式查找比较器
+for _, name in ipairs(peripherals) do
+  local p_type = peripheral.getType(name)
+  -- 检查类型是否包含'comparator'或'redstone'关键字
+  if string.find(p_type, "comparator") or string.find(p_type, "redstone") then
+    comparator = peripheral.wrap(name)
+    print(colors.green .. "Found potential comparator: " .. name .. " (Type: " .. p_type .. ")" .. colors.white)
+    break
+  end
+end
+
+-- 如果上述方法失败，尝试直接使用peripheral.find
 if not comparator then
-  -- 如果没有找到比较器，列出所有连接的外围设备
+  comparator = peripheral.find("comparator")
+  if comparator then
+    print(colors.green .. "Comparator detected using peripheral.find!" .. colors.white)
+  end
+end
+
+if not comparator then
+  -- 如果仍然没有找到比较器，列出所有连接的外围设备
   print(colors.red .. "No comparator detected!" .. colors.white)
   if #peripherals > 0 then
     print(colors.yellow .. "Connected peripherals:" .. colors.white)
@@ -43,8 +62,6 @@ if not comparator then
     print(colors.red .. "No peripherals detected at all." .. colors.white)
   end
   error("Please connect a comparator to the computer.", 0)
-else
-  print(colors.green .. "Comparator detected!" .. colors.white)
 end
 
 -- 存储所有连接的外围设备名称
@@ -171,10 +188,9 @@ local function autoSort()
   print(colors.green .. "Starting auto-sorting..." .. colors.white)
   print("Press Ctrl+T to stop.")
 
-  -- 获取比较器对象
-  local comparator = peripheral.wrap(peripheral.find("comparator"))
+  -- 检查全局比较器对象是否有效
   if not comparator then
-    print(colors.red .. "Failed to wrap comparator." .. colors.white)
+    print(colors.red .. "Comparator not available." .. colors.white)
     return
   end
 
