@@ -29,7 +29,7 @@ end
 
 -- 配置常量
 local FUEL_THRESHOLD = 500 -- 燃料不足阈值
-local INVENTORY_FULL_THRESHOLD = 15 -- 背包满时剩余空格数
+local INVENTORY_FULL_THRESHOLD = 0 -- 背包满时剩余空格数 (0表示16个格子全满)
 local COAL_NAMES = {"minecraft:coal", "minecraft:charcoal"} -- 煤炭物品名称
 local CHEST_NAMES = {"chest", "shulker_box"} -- 箱子类型名称
 
@@ -321,7 +321,7 @@ local function findChestAndDeposit()
     return true
   end
   
-  print(colors.red .. "No chest found nearby." .. colors.white)
+  print(colors.red .. "No chest found nearby. Already at starting position." .. colors.white)
   return false
 end
 
@@ -334,6 +334,8 @@ local function startMining()
   currentX, currentY, currentZ = 0, 0, 0
   direction = 0 -- 初始方向朝北
   
+  -- 捕获Ctrl+T中断，确保在停止时返回初始位置
+  local success, error = pcall(function()
   while true do
     -- 检查燃料
     if not checkFuel() then
@@ -425,6 +427,16 @@ local function startMining()
     -- os.sleep(0.1)
   end
   
+  end
+  )
+  
+  -- 确保在停止时返回初始位置
+  if not success then
+    print(colors.red .. "Program interrupted: " .. tostring(error) .. "" .. colors.white)
+  end
+  
+  print(colors.yellow .. "Returning to starting position before stopping..." .. colors.white)
+  returnToStart()
   print(colors.yellow .. "Auto mining stopped." .. colors.white)
 end
 

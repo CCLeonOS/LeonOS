@@ -32,6 +32,7 @@ local WHEAT_THRESHOLD = 64 -- 小麦存储阈值
 local SEED_SLOT = 1 -- 种子存放槽位
 local WHEAT_SLOT = 2 -- 小麦存放槽位
 local FUEL_THRESHOLD = 200 -- 燃料不足阈值
+local INVENTORY_FULL_THRESHOLD = 0 -- 背包满时剩余空格数 (0表示16个格子全满)
 local CHEST_NAMES = {"chest", "shulker_box"} -- 箱子类型名称
 
 -- 坐标跟踪变量
@@ -50,6 +51,17 @@ local function isChest(block_data)
     end
   end
   return false
+end
+
+-- 检查背包是否已满
+local function isInventoryFull()
+  local empty_slots = 0
+  for i = 1, 16 do
+    if turtle.getItemCount(i) == 0 then
+      empty_slots = empty_slots + 1
+    end
+  end
+  return empty_slots <= INVENTORY_FULL_THRESHOLD
 
 
 -- 检查燃料是否充足
@@ -205,13 +217,25 @@ local function returnToStart()
   print(colors.green .. "Returned to starting position." .. colors.white)
 end
 
--- 寻找附近的箱子并存放小麦
+-- 寻找附近的箱子并存放小麦和处理背包满的情况
 local function findChestAndDeposit()
-  print(colors.yellow .. "Wheat count reached limit. Returning to start position first..." .. colors.white)
+  -- 检查是否需要存放小麦或背包已满
+  local need_deposit = false
   
-  -- 检查当前槽位的小麦数量
+  -- 检查小麦数量
   turtle.select(WHEAT_SLOT)
-  if turtle.getItemCount(WHEAT_SLOT) < WHEAT_THRESHOLD then
+  if turtle.getItemCount(WHEAT_SLOT) >= WHEAT_THRESHOLD then
+    need_deposit = true
+  end
+  
+  -- 检查背包是否已满
+  if isInventoryFull() then
+    print(colors.yellow .. "Inventory is full. Returning to start position first..." .. colors.white)
+    need_deposit = true
+  end
+  
+  -- 如果不需要存放，直接返回
+  if not need_deposit then
     return true
   end
   
@@ -270,7 +294,7 @@ local function findChestAndDeposit()
     return true
   end
   
-  print(colors.red .. "No chest found nearby." .. colors.white)
+  print(colors.red .. "No chest found nearby. Already at starting position." .. colors.white)
   return false
 end
 
@@ -283,6 +307,8 @@ local function startFarming()
   currentX, currentY, currentZ = 0, 0, 0
   direction = 0 -- 初始方向朝北
   
+  -- 捕获Ctrl+T中断，确保在停止时返回初始位置
+  local success, error = pcall(function()
   while true do
     -- 检查燃料
     if not checkFuel() then
@@ -290,9 +316,9 @@ local function startFarming()
       break
     end
     
-    -- 检查是否需要存放小麦
+    -- 检查是否需要存放小麦或背包已满
     if not findChestAndDeposit() then
-      print(colors.red .. "Cannot deposit wheat. Stopping farming." .. colors.white)
+      print(colors.red .. "Cannot deposit items. Stopping farming." .. colors.white)
       break
     end
     
@@ -326,6 +352,16 @@ local function startFarming()
     os.sleep(0.1)
   end
   
+  end
+  )
+  
+  -- 确保在停止时返回初始位置
+  if not success then
+    print(colors.red .. "Program interrupted: " .. tostring(error) .. "" .. colors.white)
+  end
+  
+  print(colors.yellow .. "Returning to starting position before stopping..." .. colors.white)
+  returnToStart()
   print(colors.yellow .. "Auto farming stopped." .. colors.white)
 end
 
