@@ -32,11 +32,25 @@ local WHEAT_THRESHOLD = 64 -- 小麦存储阈值
 local SEED_SLOT = 1 -- 种子存放槽位
 local WHEAT_SLOT = 2 -- 小麦存放槽位
 local FUEL_THRESHOLD = 200 -- 燃料不足阈值
+local CHEST_NAMES = {"chest", "shulker_box"} -- 箱子类型名称
 
 -- 坐标跟踪变量
 local initialX, initialY, initialZ = 0, 0, 0
 local currentX, currentY, currentZ = 0, 0, 0
 local direction = 0 -- 0: 北, 1: 东, 2: 南, 3: 西
+
+-- 检查是否是箱子
+local function isChest(block_data)
+  if not block_data or not block_data.name then
+    return false
+  end
+  for _, chest_name in ipairs(CHEST_NAMES) do
+    if string.find(block_data.name, chest_name) then
+      return true
+    end
+  end
+  return false
+
 
 -- 检查燃料是否充足
 local function checkFuel()
@@ -54,10 +68,16 @@ end
 -- 检测前方是否有成熟的麦子
 local function detectWheat()
   local success, data = turtle.inspect()
-  if success and data.name and data.name == "minecraft:wheat" then
-    -- 检查是否成熟 (age为7时成熟)
-    if data.metadata and data.metadata.age == 7 then
-      return true
+  if success then
+    -- 先检查是否是箱子
+    if isChest(data) then
+      print(colors.red .. "Found chest! Mining is prohibited." .. colors.white)
+      return false
+    elseif data.name and data.name == "minecraft:wheat" then
+      -- 检查是否成熟 (age为7时成熟)
+      if data.metadata and data.metadata.age == 7 then
+        return true
+      end
     end
   end
   return false
@@ -66,7 +86,13 @@ end
 -- 收割麦子
 local function harvestWheat()
   print("Harvesting wheat...")
-  turtle.dig()
+  -- 再次检查是否是箱子，防止误挖
+  local success, data = turtle.inspect()
+  if success and not isChest(data) then
+    turtle.dig()
+  else
+    print(colors.red .. "Cannot harvest: Detected chest or invalid block." .. colors.white)
+  end
   -- 等待掉落物
   os.sleep(0.5)
   

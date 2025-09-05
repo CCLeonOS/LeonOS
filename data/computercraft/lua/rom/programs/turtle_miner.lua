@@ -31,11 +31,25 @@ end
 local FUEL_THRESHOLD = 500 -- 燃料不足阈值
 local INVENTORY_FULL_THRESHOLD = 15 -- 背包满时剩余空格数
 local COAL_NAMES = {"minecraft:coal", "minecraft:charcoal"} -- 煤炭物品名称
+local CHEST_NAMES = {"chest", "shulker_box"} -- 箱子类型名称
 
 -- 坐标跟踪变量
 local initialX, initialY, initialZ = 0, 0, 0
 local currentX, currentY, currentZ = 0, 0, 0
 local direction = 0 -- 0: 北, 1: 东, 2: 南, 3: 西
+
+-- 检查是否是箱子
+local function isChest(block_data)
+  if not block_data or not block_data.name then
+    return false
+  end
+  for _, chest_name in ipairs(CHEST_NAMES) do
+    if string.find(block_data.name, chest_name) then
+      return true
+    end
+  end
+  return false
+
 
 -- 检查燃料是否充足
 local function checkFuel()
@@ -91,10 +105,16 @@ local function refuel()
     end
     
     -- 挖掘脚下可能的煤矿
-    for i = 1, 3 do -- 尝试挖3格
-      turtle.select(old_slot) -- 确保使用正确的工具
-      if turtle.detectDown() then
-        turtle.digDown()
+      for i = 1, 3 do -- 尝试挖3格
+        turtle.select(old_slot) -- 确保使用正确的工具
+        if turtle.detectDown() then
+          -- 检查是否是箱子
+          local success, data = turtle.inspectDown()
+          if success and isChest(data) then
+            print(colors.red .. "Found chest below! Mining is prohibited." .. colors.white)
+          else
+            turtle.digDown()
+          end
         -- 检查是否挖到了煤炭
         for slot = 1, 16 do
           if turtle.getItemCount(slot) > 0 then
@@ -331,7 +351,7 @@ local function startMining()
     end
     
     -- 尝试挖掘前方
-    if not turtle.detect() then
+      if not turtle.detect() then
       print("Moving forward...")
         if turtle.forward() then
           -- 更新坐标 based on direction
@@ -373,16 +393,30 @@ local function startMining()
         end
       end
     else
-      print("Mining...")
-      turtle.dig()
+        -- 检查是否是箱子
+        local success, data = turtle.inspect()
+        if success and isChest(data) then
+          print(colors.red .. "Found chest! Mining is prohibited. Changing direction." .. colors.white)
+          turtle.turnRight()
+          direction = (direction + 1) % 4
+        else
+          print("Mining...")
+          turtle.dig()
+        end
       -- 检查是否有掉落物需要捡起
       -- os.sleep(0.5)
     end
     
     -- 检查上方是否有方块可以挖掘
-    if turtle.detectUp() then
-      print("Mining above...")
-      turtle.digUp()
+      if turtle.detectUp() then
+        -- 检查是否是箱子
+        local success, data = turtle.inspectUp()
+        if success and isChest(data) then
+          print(colors.red .. "Found chest above! Mining is prohibited." .. colors.white)
+        else
+          print("Mining above...")
+          turtle.digUp()
+        end
       -- os.sleep(0.5)
     end
     
