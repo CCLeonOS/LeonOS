@@ -4,6 +4,7 @@
 local term = require("term")
 local colors = require("colors")
 local textutils = require("textutils")
+local os = require("os")
 
 -- 保存当前颜色设置
 local old_fg = term.getTextColor()
