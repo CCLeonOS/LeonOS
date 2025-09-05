@@ -29,23 +29,45 @@ term.at(1, 2)
 -- 检查是否有比较器(comparator)连接
 local comparator = nil
 local peripherals = peripheral.getNames()
+local comparator_name = nil
 
--- 尝试通过不同方式查找比较器
+print(colors.blue .. "Searching for comparator..." .. colors.white)
+
+-- 方法1: 尝试将每个外围设备都作为比较器检查
 for _, name in ipairs(peripherals) do
-  local p_type = peripheral.getType(name)
-  -- 检查类型是否包含'comparator'或'redstone'关键字
-  if string.find(p_type, "comparator") or string.find(p_type, "redstone") then
-    comparator = peripheral.wrap(name)
-    print(colors.green .. "Found potential comparator: " .. name .. " (Type: " .. p_type .. ")" .. colors.white)
+  print("Checking peripheral: " .. name)
+  local device = peripheral.wrap(name)
+  
+  -- 检查设备是否有getOutputSignal方法
+  if device and type(device.getOutputSignal) == "function" then
+    comparator = device
+    comparator_name = name
+    print(colors.green .. "Found potential comparator: " .. name .. " (Type: " .. peripheral.getType(name) .. ")" .. colors.white)
     break
   end
 end
 
--- 如果上述方法失败，尝试直接使用peripheral.find
+-- 方法2: 如果上述方法失败，尝试直接使用peripheral.find
 if not comparator then
+  print(colors.yellow .. "Method 1 failed. Trying peripheral.find..." .. colors.white)
   comparator = peripheral.find("comparator")
   if comparator then
+    comparator_name = peripheral.find("comparator")
     print(colors.green .. "Comparator detected using peripheral.find!" .. colors.white)
+  end
+end
+
+-- 方法3: 尝试使用redstone比较器的其他可能名称
+if not comparator then
+  print(colors.yellow .. "Method 2 failed. Trying alternative names..." .. colors.white)
+  local alternative_names = {"redstone_comparator", "minecraft:comparator", "comparator_block"}
+  for _, alt_name in ipairs(alternative_names) do
+    comparator = peripheral.find(alt_name)
+    if comparator then
+      comparator_name = alt_name
+      print(colors.green .. "Comparator detected using alternative name: " .. alt_name .. "!" .. colors.white)
+      break
+    end
   end
 end
 
@@ -61,7 +83,23 @@ if not comparator then
   else
     print(colors.red .. "No peripherals detected at all." .. colors.white)
   end
+  print(colors.red .. "Troubleshooting steps:" .. colors.white)
+  print("1. Ensure the comparator is directly connected to the computer")
+  print("2. Check if the comparator is powered")
+  print("3. Verify that the comparator is not broken")
+  print("4. Try reconnecting the comparator")
   error("Please connect a comparator to the computer.", 0)
+else
+  -- 测试比较器信号
+  local signal = comparator.getOutputSignal()
+  print(colors.green .. "Comparator test successful!" .. colors.white)
+  print("Comparator name: " .. comparator_name)
+  print("Output signal level: " .. signal)
+  if signal > 0 then
+    print(colors.blue .. "Comparator is detecting items in connected chests." .. colors.white)
+  else
+    print(colors.yellow .. "Comparator is not detecting any items. Try adding items to a chest." .. colors.white)
+  end
 end
 
 -- 存储所有连接的外围设备名称

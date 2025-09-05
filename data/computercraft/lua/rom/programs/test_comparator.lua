@@ -1,60 +1,90 @@
--- Improved comparator test program
-local peripheral = require("peripheral")
+-- comparator_tester.lua
+-- Tool to test comparator connections for Chest Sorter
+
 local term = require("term")
 local colors = require("colors")
-local string = require("string")
+local peripheral = require("peripheral")
+local textutils = require("textutils")
 
-print(colors.green .. "=== Improved Comparator Test ===" .. colors.white)
+-- 保存当前颜色设置
+local old_fg = term.getTextColor()
+local old_bg = term.getBackgroundColor()
 
--- 尝试通过不同方式查找比较器
+-- 设置名称栏颜色并显示
+term.setTextColor(colors.white)
+term.setBackgroundColor(colors.blue)
+term.at(1, 1).clearLine()
+term.at(1, 1).write("=== Comparator Tester ===")
+
+-- 恢复颜色设置
+term.setTextColor(old_fg)
+term.setBackgroundColor(old_bg)
+term.at(1, 2)
+
+print("This tool will help test your comparator connection.")
+print("It uses the same detection logic as the Chest Sorter.")
+print("")
+
+-- 检测比较器
 local comparator = nil
+local comparator_name = nil
 local peripherals = peripheral.getNames()
-local comparator_found = false
 
 print(colors.blue .. "Searching for comparator..." .. colors.white)
 
--- 方法1: 检查所有外围设备的类型
+-- 方法1: 尝试将每个外围设备都作为比较器检查
 for _, name in ipairs(peripherals) do
-  local p_type = peripheral.getType(name)
-  print("Checking peripheral: " .. name .. " (Type: " .. p_type .. ")")
+  print("Checking peripheral: " .. name)
+  local device = peripheral.wrap(name)
   
-  -- 检查类型是否包含'comparator'或'redstone'关键字
-  if string.find(p_type, "comparator") or string.find(p_type, "redstone") then
-    comparator = peripheral.wrap(name)
-    print(colors.green .. "Found potential comparator: " .. name .. " (Type: " .. p_type .. ")" .. colors.white)
-    comparator_found = true
+  -- 检查设备是否有getOutputSignal方法
+  if device and type(device.getOutputSignal) == "function" then
+    comparator = device
+    comparator_name = name
+    print(colors.green .. "Found potential comparator: " .. name .. " (Type: " .. peripheral.getType(name) .. ")" .. colors.white)
     break
   end
 end
 
 -- 方法2: 如果上述方法失败，尝试直接使用peripheral.find
-if not comparator_found then
+if not comparator then
   print(colors.yellow .. "Method 1 failed. Trying peripheral.find..." .. colors.white)
   comparator = peripheral.find("comparator")
   if comparator then
+    -- 尝试获取设备名称
+    for _, name in ipairs(peripherals) do
+      if peripheral.wrap(name) == comparator then
+        comparator_name = name
+        break
+      end
+    end
     print(colors.green .. "Comparator detected using peripheral.find!" .. colors.white)
-    comparator_found = true
+  end
+end
+
+-- 方法3: 尝试使用redstone比较器的其他可能名称
+if not comparator then
+  print(colors.yellow .. "Method 2 failed. Trying alternative names..." .. colors.white)
+  local alternative_names = {"redstone_comparator", "minecraft:comparator", "comparator_block"}
+  for _, alt_name in ipairs(alternative_names) do
+    comparator = peripheral.find(alt_name)
+    if comparator then
+      -- 尝试获取设备名称
+      for _, name in ipairs(peripherals) do
+        if peripheral.wrap(name) == comparator then
+          comparator_name = name
+          break
+        end
+      end
+      print(colors.green .. "Comparator detected using alternative name: " .. alt_name .. "!" .. colors.white)
+      break
+    end
   end
 end
 
 -- 显示结果
-if comparator_found then
-  print(colors.green .. "=== Comparator Test Results ===" .. colors.white)
-  print("Comparator found: YES")
-  
-  -- 尝试获取比较器信号
-  local signal = comparator.getOutputSignal()
-  print("Output signal level: " .. signal)
-  
-  if signal > 0 then
-    print(colors.blue .. "Comparator is detecting items in connected chests." .. colors.white)
-  else
-    print(colors.yellow .. "Comparator is not detecting any items. Try adding items to a chest." .. colors.white)
-  end
-else
-  print(colors.red .. "=== Comparator Test Results ===" .. colors.white)
-  print("Comparator found: NO")
-  
+if not comparator then
+  print(colors.red .. "No comparator detected!" .. colors.white)
   if #peripherals > 0 then
     print(colors.yellow .. "Connected peripherals:" .. colors.white)
     for _, name in ipairs(peripherals) do
@@ -64,6 +94,54 @@ else
   else
     print(colors.red .. "No peripherals detected at all." .. colors.white)
   end
+  print("")
+  print(colors.red .. "Troubleshooting steps:" .. colors.white)
+  print("1. Ensure the comparator is directly connected to the computer")
+  print("2. Check if the comparator is powered")
+  print("3. Verify that the comparator is not broken")
+  print("4. Try reconnecting the comparator")
+  print("5. Make sure the comparator is placed next to a chest")
+else
+  print(colors.green .. "Comparator detected successfully!" .. colors.white)
+  print("Comparator name: " .. (comparator_name or "unknown"))
+  print("Comparator type: " .. peripheral.getType(comparator_name))
+  
+  -- 测试比较器信号
+  print("")
+  print(colors.blue .. "Testing comparator signal..." .. colors.white)
+  local signal = comparator.getOutputSignal()
+  print("Output signal level: " .. signal)
+  
+  if signal > 0 then
+    print(colors.green .. "Comparator is detecting items in connected chests." .. colors.white)
+  else
+    print(colors.yellow .. "Comparator is not detecting any items." .. colors.white)
+    print("Try adding items to a chest connected to the comparator.")
+  end
+  
+  -- 持续监控信号
+  print("")
+  print(colors.blue .. "Monitoring signal changes (press any key to stop)..." .. colors.white)
+  while true do
+    os.sleep(0.5)
+    local new_signal = comparator.getOutputSignal()
+    if new_signal ~= signal then
+      signal = new_signal
+      print("Signal changed to: " .. signal)
+      if signal > 0 then
+        print(colors.green .. "Comparator is now detecting items!" .. colors.white)
+      else
+        print(colors.yellow .. "Comparator stopped detecting items." .. colors.white)
+      end
+    end
+    if term.hasFocus() and term.getKey() ~= nil then
+      break
+    end
+  end
 end
 
-print(colors.blue .. "Test completed." .. colors.white)
+-- 恢复终端设置
+term.setTextColor(old_fg)
+term.setBackgroundColor(old_bg)
+print("")
+print("Test completed.")
