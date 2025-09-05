@@ -271,18 +271,18 @@ local function startMining()
       print("Mining...")
       turtle.dig()
       -- 检查是否有掉落物需要捡起
-      os.sleep(0.5)
+      _G.os.sleep(0.5)
     end
     
     -- 检查上方是否有方块可以挖掘
     if turtle.detectUp() then
       print("Mining above...")
       turtle.digUp()
-      os.sleep(0.5)
+      _G.os.sleep(0.5)
     end
     
     -- 短暂延迟避免CPU占用过高
-    os.sleep(0.1)
+    _G.os.sleep(0.1)
   end
   
   print(colors.yellow .. "Auto mining stopped." .. colors.white)
