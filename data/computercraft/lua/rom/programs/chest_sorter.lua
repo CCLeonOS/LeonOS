@@ -26,11 +26,29 @@ term.setTextColor(old_fg)
 term.setBackgroundColor(old_bg)
 term.at(1, 2)
 
--- 检查是否有调解器(comparator)连接
-local comparators = peripheral.find("comparator")
-if not comparators then
-  error("No comparator detected. Please connect a comparator to the computer.", 0)
+-- 检查是否有比较器(comparator)连接
+local comparator = peripheral.find("comparator")
+local peripherals = peripheral.getNames()
+
+if not comparator then
+  -- 如果没有找到比较器，列出所有连接的外围设备
+  print(colors.red .. "No comparator detected!" .. colors.white)
+  if #peripherals > 0 then
+    print(colors.yellow .. "Connected peripherals:" .. colors.white)
+    for _, name in ipairs(peripherals) do
+      local p_type = peripheral.getType(name)
+      print("- " .. name .. " (Type: " .. p_type .. ")")
+    end
+  else
+    print(colors.red .. "No peripherals detected at all." .. colors.white)
+  end
+  error("Please connect a comparator to the computer.", 0)
+else
+  print(colors.green .. "Comparator detected!" .. colors.white)
 end
+
+-- 存储所有连接的外围设备名称
+local connected_peripherals = peripherals
 
 -- 定义配置变量
 local config = {
@@ -63,8 +81,16 @@ local function setupWizard()
   print("This will guide you through setting up your chest sorter.")
   print("")
 
-  -- 列出所有连接的箱子
-  local chests = peripheral.getNames()
+  -- 列出所有连接的箱子类型外围设备
+  local chests = {}
+  for _, name in ipairs(connected_peripherals) do
+    local peripheral_type = peripheral.getType(name)
+    -- 检查是否为箱子类型的外围设备
+    if peripheral_type == "chest" or peripheral_type == "trapped_chest" or peripheral_type == "barrel" then
+      table.insert(chests, name)
+    end
+  end
+
   if #chests == 0 then
     error("No chests detected. Please connect at least one chest.", 0)
   end
@@ -145,52 +171,63 @@ local function autoSort()
   print(colors.green .. "Starting auto-sorting..." .. colors.white)
   print("Press Ctrl+T to stop.")
 
+  -- 获取比较器对象
+  local comparator = peripheral.wrap(peripheral.find("comparator"))
+  if not comparator then
+    print(colors.red .. "Failed to wrap comparator." .. colors.white)
+    return
+  end
+
   -- 捕获Ctrl+T中断
   local success, error = pcall(function()
     while true do
-      -- 检查输入箱中的物品
-      local input_inventory = peripheral.wrap(config.input_chest)
-      if not input_inventory then
+      -- 使用比较器检测输入箱是否有物品变化
+      local input_chest = peripheral.wrap(config.input_chest)
+      if not input_chest then
         print(colors.red .. "Failed to connect to input chest." .. colors.white)
         break
       end
 
-      -- 遍历输入箱的所有槽位
-      local items_found = false
-      for slot = 1, 16 do
-        local item = input_inventory.getItemDetail(slot)
-        if item then
-          items_found = true
-          print("Found item: " .. item.name)
+      -- 检查比较器信号
+      local comparator_level = comparator.getOutputSignal()
+      if comparator_level > 0 then
+        print(colors.blue .. "Comparator detected items in input chest." .. colors.white)
 
-          -- 尝试找到匹配的类别
-          local category_found = false
-          for category, chest_name in pairs(config.output_chests) do
-            if string.find(item.name, category) or string.find(item.displayName, category) then
-              local output_inventory = peripheral.wrap(chest_name)
-              if output_inventory then
-                print("Moving to '" .. category .. "' chest...")
-                input_inventory.pushItems(chest_name, slot)
-                category_found = true
-                break
-              else
-                print(colors.red .. "Failed to connect to '" .. category .. "' chest." .. colors.white)
+        -- 遍历输入箱的所有槽位
+        local items_found = false
+        for slot = 1, 16 do
+          local item = input_chest.getItemDetail(slot)
+          if item then
+            items_found = true
+            print("Found item: " .. item.name)
+
+            -- 尝试找到匹配的类别
+            local category_found = false
+            for category, chest_name in pairs(config.output_chests) do
+              if string.find(item.name, category) or string.find(item.displayName, category) then
+                local output_inventory = peripheral.wrap(chest_name)
+                if output_inventory then
+                  print("Moving to '" .. category .. "' chest...")
+                  input_chest.pushItems(chest_name, slot)
+                  category_found = true
+                  break
+                else
+                  print(colors.red .. "Failed to connect to '" .. category .. "' chest." .. colors.white)
+                end
               end
             end
-          end
 
-          if not category_found then
-            print(colors.yellow .. "No matching category found for '" .. item.name .. "'." .. colors.white)
-          end
+            if not category_found then
+              print(colors.yellow .. "No matching category found for '" .. item.name .. "'." .. colors.white)
+            end
 
-          -- 短暂延迟避免过快处理
-          os.sleep(0.1)
+            -- 短暂延迟避免过快处理
+            os.sleep(0.1)
+          end
         end
-      end
-
-      -- 如果没有找到物品，稍作等待
-      if not items_found then
-        os.sleep(1)
+      else
+        -- 如果比较器没有检测到物品，稍作等待
+        os.sleep(0.5)
       end
     end
   end)
@@ -223,8 +260,14 @@ local function showTutorial()
   print("   a. Select an input chest (where you'll place items to sort)")
   print("   b. Assign output chests to categories (e.g., 'coal', 'tools')")
   print("5. After setup, the program will automatically sort items:")
-  print("   - Items in the input chest will be moved to the appropriate output chest")
-  print("   - Based on the category names you assigned")
+  print("   - The comparator will detect when items are added to the input chest")
+  print("   - Items will be moved to the appropriate output chest based on category names")
+  print("")
+  print("Troubleshooting:")
+  print("- If you get a 'No comparator detected' error:")
+  print("  1. Check that the comparator is properly connected to the computer")
+  print("  2. Make sure the comparator is receiving a redstone signal from the chests")
+  print("  3. Verify that the comparator is not broken")
   print("")
   print("Tips:")
   print("- Use specific category names for better sorting (e.g., 'iron_ore' instead of 'ore')")
