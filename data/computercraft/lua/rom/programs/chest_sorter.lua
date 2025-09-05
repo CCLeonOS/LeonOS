@@ -52,7 +52,13 @@ if not comparator then
   print(colors.yellow .. "Method 1 failed. Trying peripheral.find..." .. colors.white)
   comparator = peripheral.find("comparator")
   if comparator then
-    comparator_name = peripheral.find("comparator")
+    -- 查找比较器名称
+    for _, name in ipairs(peripherals) do
+      if peripheral.wrap(name) == comparator then
+        comparator_name = name
+        break
+      end
+    end
     print(colors.green .. "Comparator detected using peripheral.find!" .. colors.white)
   end
 end
@@ -60,13 +66,33 @@ end
 -- 方法3: 尝试使用redstone比较器的其他可能名称
 if not comparator then
   print(colors.yellow .. "Method 2 failed. Trying alternative names..." .. colors.white)
-  local alternative_names = {"redstone_comparator", "minecraft:comparator", "comparator_block"}
+  local alternative_names = {"redstone_comparator", "minecraft:comparator", "comparator_block", "comparator"}
   for _, alt_name in ipairs(alternative_names) do
     comparator = peripheral.find(alt_name)
     if comparator then
-      comparator_name = alt_name
+      -- 查找比较器名称
+      for _, name in ipairs(peripherals) do
+        if peripheral.wrap(name) == comparator then
+          comparator_name = name
+          break
+        end
+      end
       print(colors.green .. "Comparator detected using alternative name: " .. alt_name .. "!" .. colors.white)
       break
+    end
+  end
+end
+
+-- 方法4: 尝试检测redstone接口
+if not comparator then
+  print(colors.yellow .. "Method 3 failed. Trying redstone interface..." .. colors.white)
+  local redstone = peripheral.find("redstone")
+  if redstone then
+    -- 检查redstone接口是否有比较器功能
+    if type(redstone.getComparatorOutput) == "function" then
+      comparator = redstone
+      comparator_name = "redstone_interface"
+      print(colors.green .. "Found redstone interface with comparator functionality!" .. colors.white)
     end
   end
 end
