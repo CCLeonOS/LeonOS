@@ -49,6 +49,7 @@ local function isChest(block_data)
     end
   end
   return false
+end
 
 
 -- 检查燃料是否充足

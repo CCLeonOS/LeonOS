@@ -1,5 +1,5 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "0.3.8 Beta 13"
+local INSTALLER_VERSION = "0.3.8 Beta 14"
 local DEFAULT_ROM_DIR = "/leonos"
 
 print("Start loading LeonOS installer ("..INSTALLER_VERSION..")...")
