@@ -32,6 +32,11 @@ local FUEL_THRESHOLD = 500 -- 燃料不足阈值
 local INVENTORY_FULL_THRESHOLD = 15 -- 背包满时剩余空格数
 local COAL_NAMES = {"minecraft:coal", "minecraft:charcoal"} -- 煤炭物品名称
 
+-- 坐标跟踪变量
+local initialX, initialY, initialZ = 0, 0, 0
+local currentX, currentY, currentZ = 0, 0, 0
+local direction = 0 -- 0: 北, 1: 东, 2: 南, 3: 西
+
 -- 检查燃料是否充足
 local function checkFuel()
   local currentFuel = turtle.getFuelLevel()
@@ -109,14 +114,18 @@ local function refuel()
         end
       end
       
-      if not turtle.down() then
+      if turtle.down() then
+        currentY = currentY - 1
+      else
         break
       end
     end
     
     -- 回到原来的位置
     for i = 1, 3 do
-      if not turtle.up() then
+      if turtle.up() then
+        currentY = currentY + 1
+      else
         break
       end
     end
@@ -138,9 +147,74 @@ local function isInventoryFull()
   return empty_slots <= INVENTORY_FULL_THRESHOLD
 end
 
+-- 返回初始位置
+local function returnToStart()
+  print(colors.yellow .. "Returning to starting position..." .. colors.white)
+  
+  -- 先调整方向朝北
+  while direction ~= 0 do
+    turtle.turnRight()
+    direction = (direction + 1) % 4
+  end
+  
+  -- 移动回初始X坐标
+  if currentX > 0 then
+    for _ = 1, currentX do
+      turtle.back()
+    end
+  elseif currentX < 0 then
+    for _ = 1, -currentX do
+      turtle.forward()
+    end
+  end
+  
+  -- 调整方向朝西
+  while direction ~= 3 do
+    turtle.turnRight()
+    direction = (direction + 1) % 4
+  end
+  
+  -- 移动回初始Z坐标
+  if currentZ > 0 then
+    for _ = 1, currentZ do
+      turtle.back()
+    end
+  elseif currentZ < 0 then
+    for _ = 1, -currentZ do
+      turtle.forward()
+    end
+  end
+  
+  -- 恢复朝北方向
+  while direction ~= 0 do
+    turtle.turnRight()
+    direction = (direction + 1) % 4
+  end
+  
+  -- 移动回初始Y坐标
+  if currentY > 0 then
+    for _ = 1, currentY do
+      turtle.down()
+    end
+  elseif currentY < 0 then
+    for _ = 1, -currentY do
+      turtle.up()
+    end
+  end
+  
+  -- 重置当前坐标
+  currentX, currentY, currentZ = 0, 0, 0
+  print(colors.green .. "Returned to starting position." .. colors.white)
+end
+
 -- 寻找附近的箱子并存放物品
 local function findChestAndDeposit()
-  print(colors.yellow .. "Inventory is full. Looking for chest..." .. colors.white)
+  print(colors.yellow .. "Inventory is full. Returning to start position first..." .. colors.white)
+  
+  -- 先返回初始位置
+  returnToStart()
+  
+  print(colors.yellow .. "Looking for chest near starting position..." .. colors.white)
   
   -- 尝试在周围寻找箱子
   for direction = 1, 4 do -- 四个方向
@@ -235,6 +309,10 @@ local function startMining()
   print(colors.green .. "Starting auto mining..." .. colors.white)
   print("Press Ctrl+T to stop.")
   
+  -- 重置坐标
+  currentX, currentY, currentZ = 0, 0, 0
+  direction = 0 -- 初始方向朝北
+  
   while true do
     -- 检查燃料
     if not checkFuel() then
@@ -255,15 +333,42 @@ local function startMining()
     -- 尝试挖掘前方
     if not turtle.detect() then
       print("Moving forward...")
-      if not turtle.forward() then
-        print(colors.red .. "Cannot move forward. Changing direction." .. colors.white)
-        turtle.turnRight()
+        if turtle.forward() then
+          -- 更新坐标 based on direction
+          if direction == 0 then -- 北
+            currentZ = currentZ - 1
+          elseif direction == 1 then -- 东
+            currentX = currentX + 1
+          elseif direction == 2 then -- 南
+            currentZ = currentZ + 1
+          elseif direction == 3 then -- 西
+            currentX = currentX - 1
+          end
+        else
+          print(colors.red .. "Cannot move forward. Changing direction." .. colors.white)
+          turtle.turnRight()
+          direction = (direction + 1) % 4
         if not turtle.forward() then
           turtle.turnLeft()
           turtle.turnLeft()
-          if not turtle.forward() then
+          direction = (direction + 2) % 4
+          if turtle.forward() then
+            -- 更新坐标 based on direction
+            if direction == 0 then -- 北
+              currentZ = currentZ - 1
+            elseif direction == 1 then -- 东
+              currentX = currentX + 1
+            elseif direction == 2 then -- 南
+              currentZ = currentZ + 1
+            elseif direction == 3 then -- 西
+              currentX = currentX - 1
+            end
+          else
             turtle.turnRight()
-            turtle.up()
+            direction = (direction + 1) % 4
+            if turtle.up() then
+              currentY = currentY + 1
+            end
           end
         end
       end
