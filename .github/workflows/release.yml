@@ -1,7 +1,6 @@
 name: Release
 
 on:
-  workflow_dispatch:
   release:
     types: [published]
 
@@ -12,26 +11,39 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Get previous tag
-        id: prev_tag
-        run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=1 --max-count=1))
-          echo "PREV_TAG=$PREV_TAG" >> $GITHUB_ENV
-
-      - name: Get commits between tags
-        id: changelog
+      - name: Get all tags and check current/previous
+        id: get_tags
         run: |
           git fetch --tags
-          COMMITS=$(git log $PREV_TAG..${{ github.event.release.tag_name }} --pretty=format:"- %s (%an)")
+          TAGS=$(git tag --sort=-creatordate)
+          COUNT=$(echo "$TAGS" | wc -l)
+          if [ "$COUNT" -le 1 ]; then
+            echo "PREV_TAG=" >> $GITHUB_ENV
+          else
+            # 第二新（第2行）为上一个tag
+            PREV_TAG=$(echo "$TAGS" | sed -n '2p')
+            echo "PREV_TAG=$PREV_TAG" >> $GITHUB_ENV
+          fi
+          echo "CURRENT_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ -z "$PREV_TAG" ]; then
+            # 首次release，显示全部历史
+            COMMITS=$(git log --pretty=format:"- %s (%an)")
+          else
+            COMMITS=$(git log $PREV_TAG..$CURRENT_TAG --pretty=format:"- %s (%an)")
+          fi
           echo "$COMMITS" > commits.txt
           echo "COMMITS<<EOF" >> $GITHUB_ENV
           cat commits.txt >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Update Release Notes
+      - name: Update GitHub Release notes
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.release.tag_name }}
+          tag_name: ${{ env.CURRENT_TAG }}
           body: |
             ${{ env.COMMITS }}
         env:
