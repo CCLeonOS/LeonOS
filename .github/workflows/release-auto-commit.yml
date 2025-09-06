@@ -16,11 +16,21 @@ jobs:
       - name: Get previous release tag
         id: prev_tag
         run: |
+          # 强制获取所有标签（防止标签未被拉取）
+          git fetch --tags
+          
+          # 尝试获取上一个标签
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null)
-          if [ -z "$PREV_TAG" ]; then
+          
+          # 严格验证是否为有效标签（非空且存在于标签列表中）
+          if [ -n "$PREV_TAG" ] && git tag --list | grep -q "^$PREV_TAG$"; then
+            : # 有效标签，不做处理
+          else
             PREV_TAG="initial-commit"
           fi
-          echo "prev_tag=${PREV_TAG//$'\n'/}" >> "$GITHUB_OUTPUT"
+          
+          # 彻底清理输出值（移除所有特殊字符）
+          echo "prev_tag=$(echo "$PREV_TAG" | tr -d '\n')" >> "$GITHUB_OUTPUT"
 
       - name: Generate commit log
         id: commit_log
