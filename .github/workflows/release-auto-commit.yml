@@ -16,21 +16,11 @@ jobs:
       - name: Get previous release tag
         id: prev_tag
         run: |
-          # 强制获取所有标签（防止标签未被拉取）
-          git fetch --tags
+          # 获取上一个标签或初始commit
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)
           
-          # 尝试获取上一个标签
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null)
-          
-          # 严格验证是否为有效标签（非空且存在于标签列表中）
-          if [ -n "$PREV_TAG" ] && git tag --list | grep -q "^$PREV_TAG$"; then
-            : # 有效标签，不做处理
-          else
-            PREV_TAG="initial-commit"
-          fi
-          
-          # 彻底清理输出值（移除所有特殊字符）
-          echo "prev_tag=$(echo "$PREV_TAG" | tr -d '\n')" >> "$GITHUB_OUTPUT"
+          # 按照建议：清理值中的换行和回车符，使用printf确保格式正确
+          printf "prev_tag=%s\n" "$(echo "$PREV_TAG" | tr -d '\n' | tr -d '\r')" >> "$GITHUB_OUTPUT"
 
       - name: Generate commit log
         id: commit_log
@@ -41,7 +31,7 @@ jobs:
             COMMIT_LOG=$(git log ${{ steps.prev_tag.outputs.prev_tag }}..HEAD --pretty=format:"- [%h] %s" --reverse)
           fi
           COMMIT_LOG="${COMMIT_LOG//$'\n'/\\n}"
-          echo "commit_log=$COMMIT_LOG" >> "$GITHUB_OUTPUT"
+          printf "commit_log=%s\n" "$COMMIT_LOG" >> "$GITHUB_OUTPUT"
 
       - name: Update release notes
         uses: actions/github-script@v7
