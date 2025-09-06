@@ -13,26 +13,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get previous release tag
+      - name: Get previous release tag or first commit
         id: prev_tag
         run: |
-          # 获取上一个标签或初始commit
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)
-          
-          # 按照建议：清理值中的换行和回车符，使用printf确保格式正确
-          printf "prev_tag=%s\n" "$(echo "$PREV_TAG" | tr -d '\n' | tr -d '\r')" >> "$GITHUB_OUTPUT"
+          printf "prev_tag=%s\n" "$PREV_TAG" >> $GITHUB_OUTPUT
 
       - name: Generate commit log
         id: commit_log
         run: |
-          # 检查是否是初始commit（SHA值通常是40个字符的十六进制数）
-          if [[ "${{ steps.prev_tag.outputs.prev_tag }}" =~ ^[0-9a-fA-F]{40}$ ]]; then
-            COMMIT_LOG=$(git log --pretty=format:"- [%h] %s" --reverse)
-          else
-            COMMIT_LOG=$(git log ${{ steps.prev_tag.outputs.prev_tag }}..HEAD --pretty=format:"- [%h] %s" --reverse)
-          fi
+          COMMIT_LOG=$(git log ${{ steps.prev_tag.outputs.prev_tag }}..HEAD --pretty=format:"- [%h] %s" --reverse)
           COMMIT_LOG="${COMMIT_LOG//$'\n'/\\n}"
-          printf "commit_log=%s\n" "$COMMIT_LOG" >> "$GITHUB_OUTPUT"
+          echo "commit_log=$COMMIT_LOG" >> $GITHUB_OUTPUT
 
       - name: Update release notes
         uses: actions/github-script@v7
@@ -44,7 +36,7 @@ jobs:
               repo: context.repo.repo,
               release_id: context.payload.release.id
             });
-            const newBody = `${release.body || ''}\n\n## 本次更新 Commit 记录\n${{ steps.commit_log.outputs.commit_log }}`;
+            const newBody = `${release.body}\n\n## 本次更新 Commit 记录\n${{ steps.commit_log.outputs.commit_log }}`;
             await github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
