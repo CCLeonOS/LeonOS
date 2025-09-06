@@ -19,16 +19,24 @@ jobs:
       - name: Get previous release tag
         id: prev_tag
         run: |
-          # 若没有历史 Release，默认取仓库第一个 Commit
+          # 若没有历史 Release，默认取仓库第一个 Commit 并标记为初始版本
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)
+          # 若为首次 Release（PREV_TAG 是 Commit 哈希而非标签），显式标记为初始版本
+          if ! git tag --list | grep -q "^$PREV_TAG$"; then
+            PREV_TAG="initial-commit"
+          fi
           echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
 
       # 3. 生成当前 Release 与上一个版本间的 Commit 记录（格式：哈希 + 标题）
       - name: Generate commit log
         id: commit_log
         run: |
-          # 筛选 Commit 格式：- [abc123] 修复XX问题
-          COMMIT_LOG=$(git log ${ { steps.prev_tag.outputs.prev_tag } }..HEAD --pretty=format:"- [%h] %s" --reverse)
+          # 区分首次 Release 和历史 Release 的 Commit 范围
+          if [ "${{ steps.prev_tag.outputs.prev_tag }}" = "initial-commit" ]; then
+            COMMIT_LOG=$(git log --pretty=format:"- [%h] %s" --reverse)
+          else
+            COMMIT_LOG=$(git log ${{ steps.prev_tag.outputs.prev_tag }}..HEAD --pretty=format:"- [%h] %s" --reverse)
+          fi
           # 处理特殊字符（避免 YAML 解析错误）
           COMMIT_LOG="${COMMIT_LOG//$'\n'/\\n}"
           echo "commit_log=$COMMIT_LOG" >> $GITHUB_OUTPUT
