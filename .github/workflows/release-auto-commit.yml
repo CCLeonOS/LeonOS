@@ -25,7 +25,8 @@ jobs:
       - name: Generate commit log
         id: commit_log
         run: |
-          if [ "${{ steps.prev_tag.outputs.prev_tag }}" = "initial-commit" ]; then
+          # 检查是否是初始commit（SHA值通常是40个字符的十六进制数）
+          if [[ "${{ steps.prev_tag.outputs.prev_tag }}" =~ ^[0-9a-fA-F]{40}$ ]]; then
             COMMIT_LOG=$(git log --pretty=format:"- [%h] %s" --reverse)
           else
             COMMIT_LOG=$(git log ${{ steps.prev_tag.outputs.prev_tag }}..HEAD --pretty=format:"- [%h] %s" --reverse)
