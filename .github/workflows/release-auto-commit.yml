@@ -1,55 +1,49 @@
 name: Auto Add Commits to Release Notes
 
-# 触发条件：当手动创建 Release 时运行
 on:
   release:
-    types: [published] # 仅在 Release 正式发布时执行（也可改为 drafted 测试草稿）
+    types: [published]
 
 jobs:
   build-release-notes:
     runs-on: ubuntu-latest
     steps:
-      # 1. 拉取当前仓库代码（需获取完整 Git 历史）
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 必须设置为 0，否则无法获取完整 Commit 历史
+          fetch-depth: 0
 
-      # 2. 获取上一个 Release 标签（用于确定 Commit 范围）
       - name: Get previous release tag
         id: prev_tag
         run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)
-          echo "prev_tag=${PREV_TAG}" >> $GITHUB_OUTPUT
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null)
+          if [ -z "$PREV_TAG" ]; then
+            PREV_TAG="initial-commit"
+          fi
+          echo "prev_tag=${PREV_TAG//$'\n'/}" >> "$GITHUB_OUTPUT"
 
-      # 3. 生成当前 Release 与上一个版本间的 Commit 记录（格式：哈希 + 标题）
       - name: Generate commit log
         id: commit_log
         run: |
-          # 区分首次 Release 和历史 Release 的 Commit 范围
           if [ "${{ steps.prev_tag.outputs.prev_tag }}" = "initial-commit" ]; then
             COMMIT_LOG=$(git log --pretty=format:"- [%h] %s" --reverse)
           else
             COMMIT_LOG=$(git log ${{ steps.prev_tag.outputs.prev_tag }}..HEAD --pretty=format:"- [%h] %s" --reverse)
           fi
-          # 处理特殊字符（避免 YAML 解析错误）
           COMMIT_LOG="${COMMIT_LOG//$'\n'/\\n}"
-          echo "commit_log=$COMMIT_LOG" >> $GITHUB_OUTPUT
+          echo "commit_log=$COMMIT_LOG" >> "$GITHUB_OUTPUT"
 
-      # 4. 更新 Release 说明（将 Commit 记录追加到原说明后）
       - name: Update release notes
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }} # 自动生成的 Token，无需手动配置
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { data: release } = await github.rest.repos.getRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: context.payload.release.id
             });
-            // 原 Release 说明 + 新 Commit 记录
-            const newBody = `${release.body}\n\n## 本次更新 Commit 记录\n${{ steps.commit_log.outputs.commit_log }}`;
-            // 覆盖 Release 说明
+            const newBody = `${release.body || ''}\n\n## 本次更新 Commit 记录\n${{ steps.commit_log.outputs.commit_log }}`;
             await github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
