@@ -1,6 +1,7 @@
-name: Auto Add Commits to Release Notes
+name: Release
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
 
@@ -10,36 +11,28 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Get previous release tag or first commit
+      - name: Get previous tag
         id: prev_tag
         run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)
-          printf "prev_tag=%s\n" "$PREV_TAG" >> $GITHUB_OUTPUT
+          PREV_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=1 --max-count=1))
+          echo "PREV_TAG=$PREV_TAG" >> $GITHUB_ENV
 
-      - name: Generate commit log
-        id: commit_log
+      - name: Get commits between tags
+        id: changelog
         run: |
-          COMMIT_LOG=$(git log ${{ steps.prev_tag.outputs.prev_tag }}..HEAD --pretty=format:"- [%h] %s" --reverse)
-          COMMIT_LOG="${COMMIT_LOG//$'\n'/\\n}"
-          echo "commit_log=$COMMIT_LOG" >> $GITHUB_OUTPUT
+          git fetch --tags
+          COMMITS=$(git log $PREV_TAG..${{ github.event.release.tag_name }} --pretty=format:"- %s (%an)")
+          echo "$COMMITS" > commits.txt
+          echo "COMMITS<<EOF" >> $GITHUB_ENV
+          cat commits.txt >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
-      - name: Update release notes
-        uses: actions/github-script@v7
+      - name: Update Release Notes
+        uses: softprops/action-gh-release@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { data: release } = await github.rest.repos.getRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: context.payload.release.id
-            });
-            const newBody = `${release.body}\n\n## 本次更新 Commit 记录\n${{ steps.commit_log.outputs.commit_log }}`;
-            await github.rest.repos.updateRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: context.payload.release.id,
-              body: newBody
-            });
+          tag_name: ${{ github.event.release.tag_name }}
+          body: |
+            ${{ env.COMMITS }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
