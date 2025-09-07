@@ -11,7 +11,7 @@ local SITE = "https://catos.cpolar.cn"
 textutils.coloredPrint("You are going to install CatOS to your computer.")
 textutils.coloredPrint("We suggest you backup the files before install the CatOS.")
 textutils.coloredPrint(colors.yellow, "Are you sure? (y/n)")
-local confirm = read()
+local confirm = term.read()
 if confirm ~= "y" then
   print("Installation cancelled.")
   return
