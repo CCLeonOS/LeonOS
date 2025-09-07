@@ -2,12 +2,7 @@
 
 The  following  is a  non-exhaustive  list  of  new
 and/or  changed features  in LeonOS compared  to
-LeonOS.
-
-!!!! THIS FILE IS OUTDATED !!!!
-
-See    https://ocaweso.me/LeonOS    for    more
-up-to-date documentation.
+CraftOS.
 
 Major Changes
 =============
