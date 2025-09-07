@@ -37,6 +37,7 @@ if args[1] == "run" then
   if not _G.colors then _G.colors = require("colors") end
   if not _G.textutils then _G.textutils = require("textutils") end
   if not _G.shell then _G.shell = require("shell") end
+  if not _G.http then _G.http = require("http") end
 
   -- 执行下载的代码
   local func, err = load(data, "=<wget-run>", "t", _G)
