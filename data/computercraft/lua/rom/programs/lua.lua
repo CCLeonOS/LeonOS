@@ -35,7 +35,7 @@ print("LeonOS Lua REPL.\nCall exit() to exit.")
 local history = {}
 while run do
   term.setTextColor(colors.white)
-  io.write("$ lua >>> ")
+  io.write("$ lua # ")
   local data = term.read(nil, history, function(text)
     return textutils.complete(text, env)
   end)
