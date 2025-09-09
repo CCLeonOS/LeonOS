@@ -40,7 +40,7 @@ textutils.coloredPrint(colors.yellow,
 print("Checking for update...")
 
 local http = require("http")
-local base = "https://gh.catmak.name/https://raw.githubusercontent.com/Leonmmcoset/LeonOS/refs/heads/main/"
+local base = "https://gh.catmak.name/https://raw.githubusercontent.com/CCLeonOS/LeonOS/refs/heads/main/"
 
 local Bhandle, Berr = http.get(base .. "data/computercraft/lua/bios.lua")
 if not Bhandle then

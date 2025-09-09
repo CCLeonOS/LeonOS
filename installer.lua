@@ -1,5 +1,5 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "1.0.2"
+local INSTALLER_VERSION = "1.0.3 Beta 1"
 local DEFAULT_ROM_DIR = "/leonos"
 
 print("Start loading LeonOS installer ("..INSTALLER_VERSION..")...")
@@ -47,7 +47,7 @@ print("[Installer] Loading done.")
 print("[Installer] Loading module 7")
 local function rcload(f)
   return ghload(
-    "Leonmmcoset/LeonOS/refs/heads/main/data/computercraft/lua/rom/"..f, f)
+    "CCLeonOS/LeonOS/refs/heads/main/data/computercraft/lua/rom/"..f, f)
 end
 print("[Installer] Loading done.")
 print("[Installer] Loading module 8")
@@ -123,7 +123,7 @@ end
 
 bullet("Getting repository tree...")
 
-local repodata = dl("https://gh.catmak.name/https://api.github.com/repos/Leonmmcoset/LeonOS/git/trees/main?recursive=1")
+local repodata = dl("https://gh.catmak.name/https://api.github.com/repos/CCLeonOS/LeonOS/git/trees/main?recursive=1")
 
 repodata = json.decode(repodata)
 
@@ -179,7 +179,7 @@ for i=1, #to_dl, 1 do
   local v = to_dl[i]
   if v.type == "blob" then
     parallels[#parallels+1] = function()
-      local data = dl("https://gh.catmak.name/https://raw.githubusercontent.com/Leonmmcoset/LeonOS/refs/heads/main/data/computercraft/lua/"..v.path)
+      local data = dl("https://gh.catmak.name/https://raw.githubusercontent.com/CCLeonOS/LeonOS/refs/heads/main/data/computercraft/lua/"..v.path)
       assert(io.open(v.real_path, "w")):write(data):close()
       done = done + 1
       progress(pby, done, #to_dl)
@@ -197,7 +197,7 @@ bullet("Downloading startup file...")
 assert(io.open(
  fs.exists("/startup.lua") and "/unbios-rc.lua" or "/startup.lua", "w"))
   :write(dl(
-   "https://gh.catmak.name/https://raw.githubusercontent.com/Leonmmcoset/LeonOS/refs/heads/main/unbios.lua"
+   "https://gh.catmak.name/https://raw.githubusercontent.com/CCLeonOS/LeonOS/refs/heads/main/unbios.lua"
   )):close()
 ok()
 
