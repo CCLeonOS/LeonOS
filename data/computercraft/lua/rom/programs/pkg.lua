@@ -29,7 +29,7 @@ local pkg_config = {
   local_pkg_dir = "/packages",                     -- 本地包存储目录
   installed_db = "/packages/installed.json",       -- 已安装包数据库
   cache_dir = "/packages/cache",                    -- 缓存目录
-  github_api_url = "https://raw.githubusercontent.com" -- GitHub API基础URL
+  github_api_url = "https://gh.catmak.name/https://raw.githubusercontent.com" -- GitHub API基础URL
 }
 
 -- 创建新包

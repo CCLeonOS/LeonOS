@@ -1,5 +1,5 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "1.0.1"
+local INSTALLER_VERSION = "1.0.2"
 local DEFAULT_ROM_DIR = "/leonos"
 
 print("Start loading LeonOS installer ("..INSTALLER_VERSION..")...")
@@ -193,11 +193,13 @@ term.at(1, pby).write((" "):rep((term.getSize())))
 term.at(okx, oky)
 ok()
 
+bullet("Downloading startup file...")
 assert(io.open(
  fs.exists("/startup.lua") and "/unbios-rc.lua" or "/startup.lua", "w"))
   :write(dl(
    "https://gh.catmak.name/https://raw.githubusercontent.com/Leonmmcoset/LeonOS/refs/heads/main/unbios.lua"
   )):close()
+ok()
 
 tu.coloredPrint(colors.yellow, "Your computer will restart in 3 seconds.")
 local _, y = term.getCursorPos()
