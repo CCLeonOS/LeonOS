@@ -86,8 +86,17 @@ local function redraw()
   win.setVisible(true)
 end
 
+local function getSyntaxFile(fileName)
+  local ext = string.match(fileName, "%.([^%.]+)$") or ""
+  local syntaxFiles = {
+    lua = "/leonos/modules/main/edit/syntax/lua.lua",
+    py = "/leonos/modules/main/edit/syntax/python.lua"
+  }
+  return syntaxFiles[ext] or syntaxFiles.lua
+end
+
 local syntax = require("edit.syntax")
-  .new("/leonos/modules/main/edit/syntax/lua.lua")
+  .new(getSyntaxFile(file))
 
 local function rehighlight()
   local line = {}

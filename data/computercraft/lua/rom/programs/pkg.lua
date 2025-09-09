@@ -28,7 +28,8 @@ local pkg_config = {
   repo_url = "https://example.com/leonos/packages", -- 包仓库URL
   local_pkg_dir = "/packages",                     -- 本地包存储目录
   installed_db = "/packages/installed.json",       -- 已安装包数据库
-  cache_dir = "/packages/cache"                     -- 缓存目录
+  cache_dir = "/packages/cache",                    -- 缓存目录
+  github_api_url = "https://raw.githubusercontent.com" -- GitHub API基础URL
 }
 
 -- 创建新包
@@ -168,6 +169,173 @@ local function show_help()
   print("  --force              Force install/update")
 end
 
+-- 从GitHub下载包元数据
+local function download_github_package_meta(repo_path) 
+  print("Downloading metadata from GitHub: " .. repo_path)
+  
+  -- 检查http模块是否可用
+  if not http or not http.get then
+    print("Error: HTTP module not available.")
+    return nil
+  end
+  
+  -- 构建GitHub API URL
+  -- 假设package.json在仓库根目录
+  local meta_url = string.format("%s/%s/master/package.json", pkg_config.github_api_url, repo_path)
+  
+  -- 下载package.json
+  local response, err = http.get(meta_url)
+  if not response then
+    print("Error downloading package.json: " .. err)
+    return nil
+  end
+  
+  -- 读取响应内容
+  local content = response.readAll()
+  response.close()
+  
+  -- 解析JSON
+  local ok, meta = pcall(textutils.unserializeJSON, content)
+  if not ok or not meta then
+    print("Error parsing package.json.")
+    return nil
+  end
+  
+  -- 添加仓库路径信息
+  meta.repo_path = repo_path
+  
+  return meta
+end
+
+-- 从GitHub下载包文件
+local function download_github_package_file(repo_path, file_path, save_path) 
+  -- 构建文件下载URL
+  local file_url = string.format("%s/%s/master/%s", pkg_config.github_api_url, repo_path, file_path)
+  
+  -- 下载文件
+  local response, err = http.get(file_url)
+  if not response then
+    print("Error downloading file: " .. file_path .. " - " .. err)
+    return false
+  end
+  
+  -- 确保保存目录存在
+  local save_dir = fs.getDir(save_path)
+  if not fs.exists(save_dir) then
+    fs.makeDir(save_dir)
+  end
+  
+  -- 写入文件
+  local file = io.open(save_path, "w")
+  if not file then
+    print("Error creating file: " .. save_path)
+    response.close()
+    return false
+  end
+  
+  file:write(response.readAll())
+  file:close()
+  response.close()
+  
+  return true
+end
+
+-- 安装GitHub包
+local function install_github_package(repo_path, options) 
+  print("Installing GitHub package: " .. repo_path)
+  ensure_dirs()
+  
+  -- 下载包元数据
+  local meta = download_github_package_meta(repo_path)
+  if not meta then
+    return false
+  end
+  
+  -- 解析包名 (从repo_path中提取或使用package.json中的name)
+  local pkg_name = meta.name or string.match(repo_path, "([^/]+)$")
+  if not pkg_name then
+    print("Error: Cannot determine package name.")
+    return false
+  end
+  
+  local installed_db = load_installed_db() or { packages = {} }
+  
+  -- 检查是否已安装
+  if installed_db.packages[pkg_name] and not options.force then
+    print("Package already installed. Use --force to reinstall.")
+    return false
+  end
+  
+  -- 创建包的本地目录结构
+  local pkg_version = meta.version or "1.0.0"
+  local pkg_dir = fs.combine(pkg_config.local_pkg_dir, pkg_name)
+  local version_dir = fs.combine(pkg_dir, pkg_version)
+  
+  if not fs.exists(pkg_dir) then
+    fs.makeDir(pkg_dir)
+  end
+  if not fs.exists(version_dir) then
+    fs.makeDir(version_dir)
+  end
+  
+  -- 保存package.json到本地
+  local meta_path = fs.combine(version_dir, "package.json")
+  local meta_file = io.open(meta_path, "w")
+  if not meta_file then
+    print("Error: Failed to save package.json")
+    return false
+  end
+  meta_file:write(textutils.serializeJSON(meta, false))
+  meta_file:close()
+  
+  -- 下载并安装文件
+  print("Installing version: " .. pkg_version)
+  local app_dir = "/app"
+  if not fs.exists(app_dir) then
+    fs.makeDir(app_dir)
+  end
+  
+  local success_count = 0
+  local fail_count = 0
+  
+  for _, file_path in ipairs(meta.files or {}) do
+    local dest = fs.combine(app_dir, file_path)
+    
+    if download_github_package_file(repo_path, file_path, dest) then
+      print("Installed: " .. file_path)
+      success_count = success_count + 1
+    else
+      fail_count = fail_count + 1
+    end
+  end
+  
+  if fail_count > 0 and success_count == 0 then
+    print("Error: Failed to install any files.")
+    return false
+  end
+  
+  -- 记录安装信息
+  installed_db.packages[pkg_name] = {
+    version = pkg_version,
+    installed = os.time(),
+    description = meta.description or "",
+    author = meta.author or "",
+    source = "github",
+    repo_path = repo_path
+  }
+  
+  if save_installed_db(installed_db) then
+    print("Package installed successfully.")
+    if fail_count > 0 then
+      print("Note: " .. fail_count .. " files failed to install.")
+    end
+    return true
+  else
+    print("Failed to update package database.")
+    return false
+  end
+end
+
 -- 安装包
 local function install_package(pkg_name, options)
   print("Installing package: " .. pkg_name)
@@ -180,6 +348,11 @@ local function install_package(pkg_name, options)
     return false
   end
 
+  -- 检查是否为GitHub包格式 (user/repo)
+  if pkg_name:find("/") then
+    return install_github_package(pkg_name, options)
+  end
+  
   -- 本地包安装逻辑
   local pkg_path = fs.combine(pkg_config.local_pkg_dir, pkg_name)
   if not fs.exists(pkg_path) then

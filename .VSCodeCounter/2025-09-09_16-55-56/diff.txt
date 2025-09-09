@@ -1,0 +1,53 @@
+Date : 2025-09-09 16:55:56
+Directory : d:\Projects\Lua\LeonOS\leonos
+Total : 13 files,  1875 codes, 262 comments, 282 blanks, all 2419 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Lua      |         11 |      1,755 |        260 |        259 |      2,274 |
+| Markdown |          1 |         76 |          0 |         18 |         94 |
+| YAML     |          1 |         44 |          2 |          5 |         51 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                         | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                            |         13 |      1,875 |        262 |        282 |      2,419 |
+| . (Files)                                                                                    |          1 |        122 |         32 |         12 |        166 |
+| .github                                                                                      |          1 |         44 |          2 |          5 |         51 |
+| .github\workflows                                                                            |          1 |         44 |          2 |          5 |         51 |
+| data                                                                                         |         11 |      1,709 |        228 |        265 |      2,202 |
+| data\computercraft                                                                           |         11 |      1,709 |        228 |        265 |      2,202 |
+| data\computercraft\lua                                                                       |         11 |      1,709 |        228 |        265 |      2,202 |
+| data\computercraft\lua\rom                                                                   |         11 |      1,709 |        228 |        265 |      2,202 |
+| data\computercraft\lua\rom\editors                                                           |          1 |          8 |          0 |          1 |          9 |
+| data\computercraft\lua\rom\help                                                              |          1 |         76 |          0 |         18 |         94 |
+| data\computercraft\lua\rom\modules                                                           |          1 |        127 |          0 |          1 |        128 |
+| data\computercraft\lua\rom\modules\main                                                      |          1 |        127 |          0 |          1 |        128 |
+| data\computercraft\lua\rom\modules\main\edit                                                 |          1 |        127 |          0 |          1 |        128 |
+| data\computercraft\lua\rom\modules\main\edit\syntax                                          |          1 |        127 |          0 |          1 |        128 |
+| data\computercraft\lua\rom\programs                                                          |          8 |      1,498 |        228 |        245 |      1,971 |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                     | language | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\Projects\Lua\LeonOS\leonos\.github\workflows\release.yml                                  | YAML     |         44 |          2 |          5 |         51 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\editors\advanced.lua                | Lua      |          8 |          0 |          1 |          9 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\help\chest_sorter_tutorial.md       | Markdown |         76 |          0 |         18 |         94 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\modules\main\edit\syntax\python.lua | Lua      |        127 |          0 |          1 |        128 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\catos.lua                  | Lua      |         58 |          6 |          5 |         69 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\chest_sorter.lua           | Lua      |        300 |         44 |         46 |        390 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\pkg.lua                    | Lua      |        121 |         22 |         30 |        173 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\test_comparator.lua        | Lua      |        126 |         18 |         17 |        161 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\turtle.lua                 | Lua      |        253 |         14 |         25 |        292 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\turtle_farmer.lua          | Lua      |        293 |         66 |         64 |        423 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\turtle_miner.lua           | Lua      |        346 |         58 |         58 |        462 |
+| d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\wget.lua                   | Lua      |          1 |          0 |          0 |          1 |
+| d:\Projects\Lua\LeonOS\leonos\updater.lua                                                    | Lua      |        122 |         32 |         12 |        166 |
+| Total                                                                                        |          |      1,875 |        262 |        282 |      2,419 |
++----------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

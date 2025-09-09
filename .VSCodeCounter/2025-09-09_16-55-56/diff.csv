@@ -1,0 +1,15 @@
+"filename", "language", "Lua", "Markdown", "YAML", "comment", "blank", "total"
+"d:\Projects\Lua\LeonOS\leonos\.github\workflows\release.yml", "YAML", 0, 0, 44, 2, 5, 51
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\editors\advanced.lua", "Lua", 8, 0, 0, 0, 1, 9
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\help\chest_sorter_tutorial.md", "Markdown", 0, 76, 0, 0, 18, 94
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\modules\main\edit\syntax\python.lua", "Lua", 127, 0, 0, 0, 1, 128
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\catos.lua", "Lua", 58, 0, 0, 6, 5, 69
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\chest_sorter.lua", "Lua", 300, 0, 0, 44, 46, 390
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\pkg.lua", "Lua", 121, 0, 0, 22, 30, 173
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\test_comparator.lua", "Lua", 126, 0, 0, 18, 17, 161
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\turtle.lua", "Lua", 253, 0, 0, 14, 25, 292
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\turtle_farmer.lua", "Lua", 293, 0, 0, 66, 64, 423
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\turtle_miner.lua", "Lua", 346, 0, 0, 58, 58, 462
+"d:\Projects\Lua\LeonOS\leonos\data\computercraft\lua\rom\programs\wget.lua", "Lua", 1, 0, 0, 0, 0, 1
+"d:\Projects\Lua\LeonOS\leonos\updater.lua", "Lua", 122, 0, 0, 32, 12, 166
+"Total", "-", 1755, 76, 44, 262, 282, 2419
