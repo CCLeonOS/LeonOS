@@ -69,7 +69,7 @@ term.write("[Installer] Loading done.\n")
 local term = require("term")
 local colors = require("colors")
 local rc = require("rc")
-local appgui = require("appgui")
+-- local appgui = require("appgui")
 -- 保存当前颜色设置
 local old_fg = term.getTextColor()
 local old_bg = term.getBackgroundColor()
