@@ -52,9 +52,32 @@ The package.json file contains metadata about your package. Here's an example:
 - **version**: The package version (semantic versioning recommended)
 - **author**: Your name or username
 - **description**: A short description of what the package does
+- **type**: The type of your package ("app" for applications, "api" for libraries)
 - **main**: The main Lua file to load
 - **dependencies**: Other packages your package depends on
 - **exports**: Functions or variables to export for other programs to use
+
+== Package Type Field ==
+
+The `type` field in package.json determines where your package files will be installed:
+
+- **app**: Files will be installed in the `/app` directory (default behavior)
+- **api**: Files will be installed in the `/leonos/apis` directory
+
+Example of a package.json with type field:
+
+>>color yellow
+{
+  "name": "example-api",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "description": "An example API package",
+  "type": "api",
+  "main": "example-api.lua",
+  "dependencies": {},
+  "exports": {}
+}
+>>color white
 
 == Writing Package Code ==
 

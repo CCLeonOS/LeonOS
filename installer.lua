@@ -1,5 +1,5 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "1.0.3 Beta 1"
+local INSTALLER_VERSION = "1.0.3 Beta 2"
 local DEFAULT_ROM_DIR = "/leonos"
 
 print("Start loading LeonOS installer ("..INSTALLER_VERSION..")...")
@@ -69,25 +69,28 @@ term.write("[Installer] Loading done.\n")
 local term = require("term")
 local colors = require("colors")
 local rc = require("rc")
--- 保存当前颜色设置
-local old_fg = term.getTextColor()
-local old_bg = term.getBackgroundColor()
+local appgui = require("appgui")
+-- -- 保存当前颜色设置
+-- local old_fg = term.getTextColor()
+-- local old_bg = term.getBackgroundColor()
 
--- 设置名称栏颜色并显示
-term.setTextColor(colors.white)
-term.setBackgroundColor(colors.cyan)
-term.at(1, 1).clearLine()
-term.at(1, 1).write("=== LeonOS Installer ===")
+-- -- 设置名称栏颜色并显示
+-- term.setTextColor(colors.white)
+-- term.setBackgroundColor(colors.cyan)
+-- term.at(1, 1).clearLine()
+-- term.at(1, 1).write("=== LeonOS Installer ===")
 
--- 恢复颜色设置
-term.setTextColor(old_fg)
-term.setBackgroundColor(old_bg)
-term.at(1, 2)
--- 只清除顶栏以下的区域
-for y=2, term.getSize() do
-  term.at(1, y).clearLine()
-end
-term.at(1, 2)
+-- -- 恢复颜色设置
+-- term.setTextColor(old_fg)
+-- term.setBackgroundColor(old_bg)
+-- term.at(1, 2)
+-- -- 只清除顶栏以下的区域
+-- for y=2, term.getSize() do
+--   term.at(1, y).clearLine()
+-- end
+-- term.at(1, 2)
+appgui.topbar("=== LeonOS Installer ===")
+
 tu.coloredPrint(colors.yellow,
   "LeonOS Installer (v"..INSTALLER_VERSION..")\n=======================")
 tu.coloredPrint("You are going to install LeonOS "..INSTALLER_VERSION.." to your computer.")
@@ -96,10 +99,13 @@ tu.coloredPrint("If you want to keep the existing files, please backup them firs
 tu.coloredPrint(colors.yellow, "Are you sure? (y/n)")
 local confirm = read()
 if confirm ~= "y" then
+  term.at(1, y).clearLine()
   print("Installation cancelled.")
   return
 end
-
+for y=2, term.getSize() do
+  term.at(1, y).clearLine()
+end
 local ROM_DIR
 -- tu.coloredPrint("Enter installation directory ", colors.yellow, "[",
 --   colors.lightBlue, DEFAULT_ROM_DIR, colors.yellow, "]")
@@ -200,7 +206,10 @@ assert(io.open(
    "https://gh.catmak.name/https://raw.githubusercontent.com/CCLeonOS/LeonOS/refs/heads/main/unbios.lua"
   )):close()
 ok()
-
+os.sleep(0.5)
+for y=2, term.getSize() do
+  term.at(1, y).clearLine()
+end
 tu.coloredPrint(colors.yellow, "Your computer will restart in 3 seconds.")
 local _, y = term.getCursorPos()
 

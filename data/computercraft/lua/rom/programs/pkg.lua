@@ -54,6 +54,7 @@ local function create_package(pkg_name)
     description = "A new package for LeonOS",
     author = "LeonOS User",
     license = "MIT",
+    type = "app", -- 默认类型为app
     dependencies = {},
     files = {
       pkg_name .. ".lua"
@@ -288,18 +289,25 @@ local function install_github_package(repo_path, options)
   meta_file:write(textutils.serializeJSON(meta, false))
   meta_file:close()
   
-  -- 下载并安装文件
+  -- 根据package类型确定安装目录
   print("Installing version: " .. pkg_version)
-  local app_dir = "/app"
-  if not fs.exists(app_dir) then
-    fs.makeDir(app_dir)
+  local install_dir
+  if meta.type and meta.type == "api" then
+    install_dir = "/leonos/apis"
+  else
+    install_dir = "/app" -- 默认安装到app目录
+  end
+  
+  -- 确保安装目录存在
+  if not fs.exists(install_dir) then
+    fs.makeDir(install_dir)
   end
   
   local success_count = 0
   local fail_count = 0
   
   for _, file_path in ipairs(meta.files or {}) do
-    local dest = fs.combine(app_dir, file_path)
+    local dest = fs.combine(install_dir, file_path)
     
     if download_github_package_file(repo_path, file_path, dest) then
       print("Installed: " .. file_path)
@@ -386,17 +394,23 @@ local function install_package(pkg_name, options)
     return false
   end
 
-  -- 安装文件
+  -- 根据package类型确定安装目录
   print("Installing version: " .. latest_version)
-  -- 确保app目录存在
-  local app_dir = "/app"
-  if not fs.exists(app_dir) then
-    fs.makeDir(app_dir)
+  local install_dir
+  if meta.type and meta.type == "api" then
+    install_dir = "/leonos/apis"
+  else
+    install_dir = "/app" -- 默认安装到app目录
+  end
+  
+  -- 确保安装目录存在
+  if not fs.exists(install_dir) then
+    fs.makeDir(install_dir)
   end
   
   for _, file_path in ipairs(meta.files or {}) do
     local src = fs.combine(version_path, file_path)
-    local dest = fs.combine(app_dir, file_path)
+    local dest = fs.combine(install_dir, file_path)
     
     -- 确保目标目录存在
     local dest_dir = fs.getDir(dest)
@@ -508,9 +522,14 @@ local function remove_package(pkg_name)
     file:close()
     local ok, meta = pcall(textutils.unserializeJSON, meta_content)
     if ok and meta then
-      -- 删除包文件
+      -- 移除包文件
       for _, file_path in ipairs(meta.files or {}) do
-        local dest = fs.combine("/rom", file_path)
+        local dest
+        if meta.type and meta.type == "api" then
+          dest = fs.combine("/leonos/apis", file_path)
+        else
+          dest = fs.combine("/app", file_path)
+        end
         if fs.exists(dest) then
           fs.delete(dest)
           print("Removed: " .. file_path)

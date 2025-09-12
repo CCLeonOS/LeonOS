@@ -4,6 +4,7 @@
   "description": "An example package for LeonOS",
   "author": "LeonMMcoset",
   "license": "MIT",
+  "type": "app",
   "dependencies": {},
   "files": [
     "example.lua"

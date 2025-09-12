@@ -1,0 +1,103 @@
+=== appgui API ===
+
+The `appgui` API provides simple functions for drawing top bars and bottom bars in LeonOS applications, making it easy to create consistent user interfaces.
+
+== Introduction ==
+
+The appgui API is designed to simplify the process of adding professional-looking UI elements to your applications. It provides two main functions for drawing centered text bars at the top or bottom of the screen.
+
+== Available Functions ==
+
+- **appgui.topbar(text, [fgColor], [bgColor])**: Draws a top bar with centered text
+- **appgui.downbar(text, [fgColor], [bgColor])**: Draws a bottom bar with centered text
+
+== Function Parameters ==
+
+Both functions accept the following parameters:
+
+- **text**: (string) The text to display in the bar
+- **fgColor**: (number, optional) The foreground color (default: white)
+- **bgColor**: (number, optional) The background color (default: blue)
+
+== Usage Examples ==
+
+=== Basic Usage ===
+
+First, you need to import the appgui module:
+
+>>color yellow
+local appgui = require("appgui")
+>>color white
+
+Then you can use the functions to draw bars:
+
+1. Draw a top bar with default colors (white text on blue background):
+>>color yellow
+appgui.topbar("My Application Title")
+>>color white
+
+2. Draw a bottom bar with default colors:
+>>color yellow
+appgui.downbar("Status: Ready")
+>>color white
+
+=== Custom Colors ===
+
+You can specify custom colors using the `colors` module:
+
+>>color yellow
+local colors = require("colors")
+
+-- Red text on yellow background
+appgui.topbar("Warning Message", colors.red, colors.yellow)
+
+-- Green text on black background
+appgui.downbar("Success", colors.green, colors.black)
+>>color white
+
+=== Complete Example ===
+
+Here's a complete example showing how to use both top and bottom bars in an application:
+
+>>color yellow
+local appgui = require("appgui")
+local term = require("term")
+local colors = require("colors")
+
+-- Clear the screen
+term.clear()
+
+-- Draw top and bottom bars
+appgui.topbar("My Application")
+appgui.downbar("Press Q to quit")
+
+-- Add some content
+print()
+print("Welcome to my application!")
+print()
+print("This is a demonstration of the appgui API.")
+print()
+
+-- Wait for 'Q' key to exit
+while true do
+  local event, key = os.pullEvent("key")
+  if key == 16 then -- Q key
+    break
+  end
+end
+>>color white
+
+== Notes ==
+
+- The text will be automatically centered in the bar
+- The functions will preserve the original terminal colors by saving and restoring them
+- After drawing a top bar, the cursor will be positioned below the bar
+- After drawing a bottom bar, the cursor will be positioned at the top of the screen
+- You can use any colors available in the `colors` module
+- If the text is longer than the terminal width, it will be truncated
+
+== See Also ==
+
+- **colors**: For available color values
+- **term**: For other terminal manipulation functions
+- **appgui_demo**: A demonstration program showing the appgui API in action
