@@ -4,3 +4,7 @@ Use
 wget run https://gh.catmak.name/https://raw.githubusercontent.com/CCLeonOS/LeonOS/refs/heads/main/installer.lua
 ```
 to install the LeonOS system.
+
+---
+
+LeonCore are open source as BLC license
