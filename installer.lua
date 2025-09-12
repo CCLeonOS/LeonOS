@@ -70,27 +70,25 @@ local term = require("term")
 local colors = require("colors")
 local rc = require("rc")
 local appgui = require("appgui")
--- -- 保存当前颜色设置
--- local old_fg = term.getTextColor()
--- local old_bg = term.getBackgroundColor()
+-- 保存当前颜色设置
+local old_fg = term.getTextColor()
+local old_bg = term.getBackgroundColor()
 
--- -- 设置名称栏颜色并显示
--- term.setTextColor(colors.white)
--- term.setBackgroundColor(colors.cyan)
--- term.at(1, 1).clearLine()
--- term.at(1, 1).write("=== LeonOS Installer ===")
+-- 设置名称栏颜色并显示
+term.setTextColor(colors.white)
+term.setBackgroundColor(colors.cyan)
+term.at(1, 1).clearLine()
+term.at(1, 1).write("=== LeonOS Installer ===")
 
--- -- 恢复颜色设置
--- term.setTextColor(old_fg)
--- term.setBackgroundColor(old_bg)
--- term.at(1, 2)
--- -- 只清除顶栏以下的区域
--- for y=2, term.getSize() do
---   term.at(1, y).clearLine()
--- end
--- term.at(1, 2)
-appgui.topbar("=== LeonOS Installer ===")
-
+-- 恢复颜色设置
+term.setTextColor(old_fg)
+term.setBackgroundColor(old_bg)
+term.at(1, 2)
+-- 只清除顶栏以下的区域
+for y=2, term.getSize() do
+  term.at(1, y).clearLine()
+end
+term.at(1, 2)
 tu.coloredPrint(colors.yellow,
   "LeonOS Installer (v"..INSTALLER_VERSION..")\n=======================")
 tu.coloredPrint("You are going to install LeonOS "..INSTALLER_VERSION.." to your computer.")
