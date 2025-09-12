@@ -1,9 +1,5 @@
 -- LeonOS installer
-local term = require("term")
-local colors = require("colors")
-local rc = require("rc")
-
-local INSTALLER_VERSION = "1.0.3 Beta 3"
+local INSTALLER_VERSION = "1.0.3 Beta 4"
 local DEFAULT_ROM_DIR = "/leonos"
 term.at(1, y).clearLine()
 
@@ -58,6 +54,7 @@ print("[Installer] Loading done.")
 print("[Installer] Loading module 8")
 -- get LeonOS's textutils with its extra utilities
 local tu = rcload("apis/textutils.lua")
+local appgui = rcload("apis/appgui.lua")
 
 local function progress(y, a, b)
   local progress = a/b
@@ -70,30 +67,31 @@ local function progress(y, a, b)
     colors.yellow, "]")
 end
 term.write("[Installer] Loading done.\n")
--- 程序顶部名称栏
-local term = require("term")
-local colors = require("colors")
-local rc = require("rc")
--- local appgui = require("appgui")
--- 保存当前颜色设置
-local old_fg = term.getTextColor()
-local old_bg = term.getBackgroundColor()
+-- -- 程序顶部名称栏
+-- local term = require("term")
+-- local colors = require("colors")
+-- local rc = require("rc")
+-- -- local appgui = require("appgui")
+-- -- 保存当前颜色设置
+-- local old_fg = term.getTextColor()
+-- local old_bg = term.getBackgroundColor()
 
--- 设置名称栏颜色并显示
-term.setTextColor(colors.white)
-term.setBackgroundColor(colors.cyan)
-term.at(1, 1).clearLine()
-term.at(1, 1).write("=== LeonOS Installer ===")
+-- -- 设置名称栏颜色并显示
+-- term.setTextColor(colors.white)
+-- term.setBackgroundColor(colors.cyan)
+-- term.at(1, 1).clearLine()
+-- term.at(1, 1).write("=== LeonOS Installer ===")
 
--- 恢复颜色设置
-term.setTextColor(old_fg)
-term.setBackgroundColor(old_bg)
-term.at(1, 2)
--- 只清除顶栏以下的区域
-for y=2, term.getSize() do
-  term.at(1, y).clearLine()
-end
-term.at(1, 2)
+-- -- 恢复颜色设置
+-- term.setTextColor(old_fg)
+-- term.setBackgroundColor(old_bg)
+-- term.at(1, 2)
+-- -- 只清除顶栏以下的区域
+-- for y=2, term.getSize() do
+--   term.at(1, y).clearLine()
+-- end
+-- term.at(1, 2)
+appgui.topbar("=== LeonOS Installer ===")
 tu.coloredPrint(colors.yellow,
   "LeonOS Installer (v"..INSTALLER_VERSION..")\n=======================")
 tu.coloredPrint("You are going to install LeonOS "..INSTALLER_VERSION.." to your computer.")
