@@ -9,7 +9,7 @@ to install the LeonOS system.
 
 LeonCore are open source as BLC license
 
-'''
+‘‘‘
 BLC Certificate
 
 Copyright © LeonOS Organization. All rights reserved.
@@ -25,4 +25,4 @@ Any contributor who submits code, documents, or other contributions to the LeonC
 This version of the BLC Agreement is Version 1.0. The LeonOS Organization reserves the right to revise this agreement, and the revised agreement shall be published through the official GitHub repository of the LeonCore project. After the revised agreement takes effect, any act of using or modifying the operating system shall comply with the latest version of the agreement.
 
 THE OPERATING SYSTEM WITH THE BLC CERTIFICATE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE OPERATING SYSTEM OR THE USE OR OTHER DEALINGS IN THE OPERATING SYSTEM.
-'''
+‘‘‘
