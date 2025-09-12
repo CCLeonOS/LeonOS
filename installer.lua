@@ -1,6 +1,11 @@
 -- LeonOS installer
-local INSTALLER_VERSION = "1.0.3 Beta 2"
+local term = require("term")
+local colors = require("colors")
+local rc = require("rc")
+
+local INSTALLER_VERSION = "1.0.3 Beta 3"
 local DEFAULT_ROM_DIR = "/leonos"
+term.at(1, y).clearLine()
 
 print("Start loading LeonOS installer ("..INSTALLER_VERSION..")...")
 print("[Installer] Loading module 1")
