@@ -5,6 +5,9 @@ wget run https://gh.catmak.name/https://raw.githubusercontent.com/CCLeonOS/LeonO
 ```
 to install the LeonOS system.
 
+> ![info]
+> The CatOS program is moved to `ccleonos/catos-installer`.
+
 ---
 
 LeonOS's kernal "The LeonCore Open Source Project" which is LeonCore is open source as BLC license
