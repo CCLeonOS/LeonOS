@@ -10,7 +10,7 @@ to install the LeonOS system.
 
 ---
 
-LeonOS's kernal "The LeonCore Open Source Project" which is LeonCore is open source as BLC license
+LeonOS's kernal "The LeonCore Open Source Project" which is LeonCore is open source as BLC Certificate
 
 ```
 BLC Certificate
