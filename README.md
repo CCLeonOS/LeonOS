@@ -5,7 +5,7 @@ wget run https://gh.catmak.name/https://raw.githubusercontent.com/CCLeonOS/LeonO
 ```
 to install the LeonOS system.
 
-> ![info]
+> [!NOTE]
 > The CatOS program is moved to `ccleonos/catos-installer`.
 
 ---
