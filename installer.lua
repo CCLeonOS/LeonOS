@@ -205,9 +205,7 @@ assert(io.open(
   )):close()
 ok()
 os.sleep(0.5)
-for y=2, term.getSize() do
-  term.at(1, y).clearLine()
-end
+
 tu.coloredPrint(colors.yellow, "Your computer will restart in 3 seconds.")
 local _, y = term.getCursorPos()
 
