@@ -20,8 +20,12 @@ print("The bottom bar shows the status information.")
 print()
 print("Press any key to see custom colors...")
 
--- Wait for a key press
-os.pullEvent("key")
+-- Wait for a key press using a safe event pulling function
+local pullEventFunc = os.pullEvent or os.pullEventRaw
+if not pullEventFunc then
+  error("No valid event pulling function found")
+end
+local event, key = table.unpack({pullEventFunc("key")})
 
 -- Clear the screen and redraw with custom colors
 term.clear()
@@ -35,8 +39,12 @@ print("Top bar: Yellow text on Red background")
 print()
 print("Press any key to continue...")
 
--- Wait for a key press
-os.pullEvent("key")
+-- Wait for a key press using a safe event pulling function
+local pullEventFunc = os.pullEvent or os.pullEventRaw
+if not pullEventFunc then
+  error("No valid event pulling function found")
+end
+local event, key = table.unpack({pullEventFunc("key")})
 
 -- Clear the screen and draw both top and bottom bars
 term.clear()
@@ -53,7 +61,12 @@ print("Press Q to exit this demo.")
 
 -- Main loop to handle key presses
 while true do
-  local event, key = os.pullEvent("key")
+  -- Use a safe event pulling function
+  local pullEventFunc = os.pullEvent or os.pullEventRaw
+  if not pullEventFunc then
+    error("No valid event pulling function found")
+  end
+  local event, key = table.unpack({pullEventFunc("key")})
   if key == 16 then -- Q key
     break
   end
